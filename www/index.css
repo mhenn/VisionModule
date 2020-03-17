@@ -1,0 +1,7 @@
+#video {
+  border: 1px solid #cccccc;
+  width: 320px;
+  height: 240px;
+  position: relative;
+  background-color: #ffffff;
+}

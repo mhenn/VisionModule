@@ -151,7 +151,7 @@ FileDevice::startCapture (void)
   std::cout << __PRETTY_FUNCTION__ << " at (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
 #endif  
 
-  pFrame=av_frame_alloc();
+  pFrame=avcodec_alloc_frame();
   if( pFrame == nullptr )
     {
       std::cerr << "ERROR: unable to open codec" << std::endl;
@@ -159,7 +159,7 @@ FileDevice::startCapture (void)
     }
 
   // Allocate an AVFrame structure
-  pFrameRGB=av_frame_alloc();
+  pFrameRGB=avcodec_alloc_frame();
   if( pFrameRGB == nullptr )
     {
       std::cerr << "ERROR: unable to open codec" << std::endl;

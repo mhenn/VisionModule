@@ -1,0 +1,36 @@
+<html>
+<head>
+
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  <title>Vision & Motion Controller</title>
+
+
+  <link type="text/css" href="index.css" rel="stylesheet" media="all" title="Vision & Motion Controller">
+
+<!--
+ <link
+href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css"
+rel="stylesheet">
+<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+-->
+  <link href="/jquery-ui.css" rel="stylesheet">
+ 
+  <script language="javascript" type="text/javascript" src="/jquery.js"></script> 
+  <script language="javascript" type="text/javascript" src="/jquery-ui.js"></script>
+  <script language="javascript" type="text/javascript" src="./visionmodulecontroller.js"></script>
+</head>
+
+
+<body>
+   <h1> Vision and Motion Controller </h1>
+
+<div id="video"><noscript><img src="/?action=snapshot" /></noscript> 
+  <body onload="InitVisionModule()"></body> 
+
+  <canvas id="videocanvas" width="320" height="240" style="border: 1px solid rgb(0, 0, 0);"> </canvas> </div>
+
+</body>
+
+
+</html>
