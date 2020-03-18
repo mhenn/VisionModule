@@ -19,6 +19,8 @@
 #include "globals.h"
 #include "videostream.h"
 #include "configuration.h"
+#include "pwmport.h"
+
 
 HTTPDClientThread::HTTPDClientThread( HTTPD * server, int fd )
   : HTTPDThread(server)
@@ -36,6 +38,7 @@ Input Value.: arg is the filedescriptor and server-context of the connected TCP
               thread function.
 Return Value: always NULL
 ******************************************************************************/
+
 void * 
 HTTPDClientThread::Run( void ) 
 {
@@ -43,6 +46,7 @@ HTTPDClientThread::Run( void )
   char buffer[BUFFER_SIZE]={0}, *pb=buffer;
   iobuffer iobuf;
   request req;
+
   //  cfd lcfd; /* local-connected-file-descriptor */
   char const * s;
   Globals * glob = Globals::GetGlobals();
@@ -53,12 +57,13 @@ HTTPDClientThread::Run( void )
   
   /* What does the client want to receive? Read the request. */
   memset(buffer, 0, sizeof(buffer));
+  
+
   if ( (cnt = _readline( &iobuf, buffer, sizeof(buffer)-1, 5)) == -1 ) 
     {
       close(fd);
       return NULL;
     }
-  
   /* determine what to deliver */
   if ( strstr(buffer, "GET /?action=snapshot") != NULL ) 
     {
@@ -72,7 +77,6 @@ HTTPDClientThread::Run( void )
     {
       int len;
       req.type = A_COMMAND;
-      
       /* advance by the length of known string */
       if ( (pb = strstr(buffer, "GET /?action=command")) == NULL ) 
 	{
@@ -91,7 +95,6 @@ HTTPDClientThread::Run( void )
       }
       memset(req.parameter, 0, len+1);
       strncpy(req.parameter, pb, len);
-      
       DBG("command parameter (len: %d): \"%s\"\n", len, req.parameter);
     }
   else if (strstr(buffer, "POST " ) != NULL ) 
@@ -200,12 +203,14 @@ HTTPDClientThread::Run( void )
     DBG("Request for stream\n");
     send_stream();	  
     break;
-  case A_COMMAND:
+  case A_COMMAND: 
+    /*  Here the command handling   */
     if ( GetServer()->GetCommands() == 0 ) {
       send_error( 501, "this server is configured to not accept commands");
       break;
     }
     ParseCommand( req.parameter);
+    cout << req.parameter << endl;
     break;
   case A_FILE:
     if ( GetServer()->GetDocRoot() == NULL )
@@ -733,11 +738,9 @@ Return Value: -
 ******************************************************************************/
 void 
 HTTPDClientThread::ParseCommand( char const * parameter) 
-{
+{ 
   Globals * glob = Globals::GetGlobals();
   char tmpCommand[256];
-  //  char tmp[256];
-  //  char const * pcommand;
   char response[1024];
 
   char buffer[BUFFER_SIZE] = {0};
@@ -751,10 +754,10 @@ HTTPDClientThread::ParseCommand( char const * parameter)
   struct Command const * icom = GetServer()->GetCommands();
 
   int done = -1;
-
   while( ( icom != NULL ) && ( icom->command != NULL ) )
     {
-      int ret = icom->command( glob->GetVideo(), parameter, response, sizeof(response) );
+
+      int ret = icom->command( glob->GetVideo(), parameter, response, sizeof(response));
       if ( ret > 0 )
 	{
 	  done = ret;

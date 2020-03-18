@@ -130,32 +130,6 @@ function AJAX_response(text) {
     }
 }
 
-function KeyDown(ev) {
-    ev = ev || window.event;
-    pressed = ev.which || ev.keyCode;
-    
-    switch (pressed) {
-    case 37:
-        //send_command('pan_plus');
-        break;
-    case 39:
-        //send_command('pan_minus');
-        break;
-    case 38:
-        //send_command('tilt_minus');
-        break;
-    case 40:
-        //send_command('tilt_plus');
-        break;
-    case 32:
-        //send_command('reset_pan_tilt');
-        break;
-    default:
-        break;
-    }
-}
-
-document.onkeydown = KeyDown;
 
 var imageNr = 0; // Serial number of current image
 var paused = false;  

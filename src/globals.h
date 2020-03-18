@@ -5,7 +5,8 @@
 
 #include <inttypes.h>
 #include <pthread.h>
-
+#include "pwmport.h"
+#include <vector>
 class FrameBuffer;
 class VideoStream;
 class Serial;
@@ -16,6 +17,10 @@ class Configuration;
 
 class Globals
 {
+ public:
+  std::vector<PWMPort*> ports; 
+ public:
+  void SetPorts(std::vector<PWMPort*> ports){ this->ports = ports;} 
  public:
   static Globals * GetGlobals( void );
 

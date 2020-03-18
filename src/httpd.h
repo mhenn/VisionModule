@@ -54,6 +54,7 @@ enum CommandReturn
 struct Command 
 {
   int (* command)( VideoStream * video, char const * parameter, char * response, unsigned int maxResponseLength );
+  int (*com)(int port, char const * parameter, char * response, unsigned int maxResponseLength );
 };
 
 #if 0

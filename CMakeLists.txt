@@ -53,6 +53,7 @@ ADD_EXECUTABLE( vision_module
   src/serial.cpp
   src/videostream.cpp
   src/udpvisionserver.cpp
+  src/pwmport.cpp
 )
 
 ADD_DEFINITIONS(
@@ -95,5 +96,31 @@ target_link_libraries(visionclient
    "v4l2"
 #   "avcodec" "avformat" "avutil" "swscale" "z" "bz2"
 #   "dc1394"
+   "pthread"
+   "jpeg")
+
+ADD_EXECUTABLE( motionclient
+  src/motionclientmain.cpp
+)
+
+target_link_libraries(motionclient
+   "boost_program_options"
+   "boost_system"
+   "boost_thread"
+   "v4l2"
+   "pthread"
+   "jpeg")
+
+ADD_EXECUTABLE( motionserver
+  src/motionservermain.cpp
+  src/motionserver.cpp
+  src/pwmport.cpp
+)
+
+target_link_libraries(motionserver
+   "boost_program_options"
+   "boost_system"
+   "boost_thread"
+   "v4l2"
    "pthread"
    "jpeg")

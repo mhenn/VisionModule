@@ -19,6 +19,7 @@
 #include "httpdserverthread.h"
 #include "httpdclientthread.h"
 
+
 HTTPDServerThread::HTTPDServerThread( HTTPD * server )
   : HTTPDThread(server)
 {
@@ -69,7 +70,7 @@ HTTPDServerThread::Run( void )
     {
       if ( e == 0 )
 	{
-	  std::cerr << "Unable to parse addresse " << server->GetHTTPAddr() << std::endl;
+	  std::cerr << "Unable to parse address " << server->GetHTTPAddr() << std::endl;
 	  std::exit(2);
 	}
       if ( e < 0 )
@@ -105,14 +106,14 @@ HTTPDServerThread::Run( void )
     
     DBG("waiting for clients to connect\n");
     int cfd = accept( fd, (struct sockaddr *)&client_addr, &addr_len);
-
+    
     HTTPDClientThread * client = new HTTPDClientThread( GetServer(), cfd );
-
+    
     /* start new thread that will handle this TCP connected client */
     DBG("create thread to handle client that just established a connection\n");
     syslog(LOG_INFO, "serving client: %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-
-    if( client->StartAndDetach() != 0 )
+    
+  if( client->StartAndDetach() != 0 )
       {
 	DBG("could not launch another client thread\n");
 	::close(fd);
