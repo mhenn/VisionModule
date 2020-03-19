@@ -1,20 +1,21 @@
 #include "motionserver.h"
 #include <vector>
 
-std::map<int, PWMPort *> InitPorts(){
+std::map<string, PWMPort *> InitPorts(){
    
    vector<PWMPort*> ports;
    int centre = 1500000 ;
    int period = 5000000 ;
-   vector<int> portnrs{3, 5,6,11};
-   std::map<int, PWMPort *> mapOfPorts; 
+   vector<int> portnrs{3, 5,6,9};
+   vector<string> names{"yaw", "pit", "spe", "ste"};
+   std::map<string, PWMPort *> mapOfPorts; 
 
-   for (int nr : portnrs){
-      PWMPort* pp = new PWMPort(to_string(nr));
+   for (unsigned int i = 0; i < portnrs.size(); i++){
+      PWMPort* pp = new PWMPort(to_string(portnrs[i]));
       pp->enable_port();
       pp->set_period(to_string(period));
       pp->set_duty_cycle(to_string(centre));
-      mapOfPorts.insert(std::make_pair(nr, pp));
+      mapOfPorts.insert(std::make_pair(names[i], pp));
    }
    return mapOfPorts;
 }

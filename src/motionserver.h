@@ -14,10 +14,11 @@ class UDPMotionServer
 public:
   UDPMotionServer(boost::asio::io_service & io_service, unsigned int port);
   void StartServer();
-  void SetPorts(std::map<int, PWMPort*> ports){ this->ports = ports;}
+  void SetPorts(std::map<std::string, PWMPort*> ports){ this->ports = ports;}
  
 private:
-  std::map<int, PWMPort *> ports;
+  std::string CalculatePercentage(std::string stval);
+  std::map<std::string, PWMPort *> ports;
   int SendResponse( std::string const & msg );
 
 private:
