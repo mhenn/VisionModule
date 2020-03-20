@@ -102,7 +102,7 @@ function AJAX_put(req, url, file) {
 }
 
 function SendCommand(cmd) {
-    document.getElementById('hints').firstChild.nodeValue = "Send command: " + cmd;
+    //document.getElementById('hints').firstChild.nodeValue = "Send command: " + cmd;
     req = AJAX_init();
     if ( req != null )
     {

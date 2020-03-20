@@ -43,6 +43,7 @@ using namespace std;
 #include "httpd.h"
 #include "serial.h"
 #include "videostream.h"
+#include "pwmport.h"
 
 using namespace std;
 
@@ -57,6 +58,7 @@ struct Command const VideoStream::Commands[] =
     { VideoStream::CommandDeleteColour },
     { VideoStream::CommandSelectColour },
     { VideoStream::CommandShutdown },
+    {NULL, PWMPort::CommandProcessMotion},
     { NULL }
   };
 

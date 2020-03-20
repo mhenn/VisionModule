@@ -754,10 +754,12 @@ HTTPDClientThread::ParseCommand( char const * parameter)
   struct Command const * icom = GetServer()->GetCommands();
 
   int done = -1;
-  while( ( icom != NULL ) && ( icom->command != NULL ) )
+  while( ( icom != NULL ) && ( (icom->command != NULL ) || (icom->com != NULL) ) )
     {
-
-      int ret = icom->command( glob->GetVideo(), parameter, response, sizeof(response));
+      int ret = -1;                                                               
+      //int ret = icom->command( glob->GetVideo(), parameter, response, sizeof(response));
+      if (icom->com != NULL)
+         ret = icom->com(2, parameter,response,sizeof(response));
       if ( ret > 0 )
 	{
 	  done = ret;

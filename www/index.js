@@ -2,18 +2,21 @@ document.addEventListener("keydown", keyDownHandler, false);
 
 
 function keyDownHandler(event) {
+    
+    var base = "processmotion&mode=";    
+
     if(event.keyCode == 39) {
        console.log("plus yaw");
-       SendCommand("yaw_plus");
+       SendCommand(base + "yaw&direction=pos");
     }
     else if(event.keyCode == 37) {
-       SendCommand("yaw_minus");
+       SendCommand(base + "yaw&direction=neg");
     }
     if(event.keyCode == 40) {
-       SendCommand("pitch_minus");
+       SendCommand(base + "pit&direction=pos");
     }
     else if(event.keyCode == 38) {
-       SendCommand("pitch_plus");
+       SendCommand(base + "pit&direction=neg");
     }
 }
 

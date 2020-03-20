@@ -17,7 +17,9 @@ public:
   void SetPorts(std::map<std::string, PWMPort*> ports){ this->ports = ports;}
  
 private:
-  std::string CalculatePercentage(std::string stval);
+  std::string CalculateCycle(std::string stval);
+  std::string MotionByPercentage(std::string command, size_t len);
+  std::string MotionByDirection(const char * command);
   std::map<std::string, PWMPort *> ports;
   int SendResponse( std::string const & msg );
 
@@ -25,7 +27,6 @@ private:
   boost::asio::ip::udp::socket socket;
   boost::asio::ip::udp::endpoint remoteEP;
   boost::array<char,1> receiveBuffer;
-
 };
 
 #endif /* __UDP_MOTION_SERVER_HPP__ */

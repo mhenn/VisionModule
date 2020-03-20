@@ -33,13 +33,4 @@ private:
 	udp::endpoint endpoint_;
 };
 
-int main()
-{
-	boost::asio::io_service io_service;
-	UDPClient client(io_service, "10.42.0.130", "8000");
-        std::string  input;
-        for(;;){
-          std::getline(std::cin,input);
-	  client.send(input);
-        }
-}
+

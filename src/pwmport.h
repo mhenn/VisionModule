@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "httpd.h"
+
 using namespace std;
 
 
@@ -19,7 +21,10 @@ class PWMPort{
    void write_file(string path, string value);
 
  public:
-   
+   string pos = "50";
+   static int CommandProcessMotion(int port, char const * command, char * response, unsigned int maxResponseLength);
+
+   static struct Command const Commands[];
    PWMPort(string port){
       this->port = port;
       string pwm_port = base + "pwm" + port + "/";

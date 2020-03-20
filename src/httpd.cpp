@@ -27,6 +27,7 @@
 #include "httpd.h"
 #include "httpdthread.h"
 #include "videostream.h"
+#include "pwmport.h"
 #include "configuration.h"
 #include "globals.h"
 

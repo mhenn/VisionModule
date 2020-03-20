@@ -9,6 +9,7 @@
 #include <iostream>
 #include <syslog.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <string>
 
 using boost::asio::ip::udp;
@@ -18,12 +19,50 @@ UDPMotionServer::UDPMotionServer( boost::asio::io_service &io_service, unsigned 
 
 
 std::string 
-UDPMotionServer::CalculatePercentage(std::string stval){
+UDPMotionServer::CalculateCycle(std::string stval){
 
    short val = boost::lexical_cast<short>(stval);
    double percentage = (double)val * 0.01;
    int ret = 1000000 + (percentage * 1000000);
    return to_string(ret);
+}
+
+std::string
+UDPMotionServer::MotionByPercentage(std::string command, size_t len){
+   short m_size = 2;
+   if (len ==6)
+      m_size = 4;
+         
+   std::string com = command.substr(0,3);
+   std::string val = command.substr(3,m_size);
+     
+   return com + val;  
+}
+
+std::string
+UDPMotionServer::MotionByDirection(const char * command){
+   short val = 0; 
+   const char * s;
+   std::string com; 
+
+   if ( (s = strstr(command, "HTTP")) != NULL){
+      s = s + strlen("HTTP");
+      std::string tmp(s,s+3);
+      s = s + 3;
+      com = tmp;
+      std::string direction(s,s+3);
+      val = boost::lexical_cast<short>(this->ports[com]->pos);
+
+      if (direction == "pos"){
+         if (val <= 95)
+            val = val + 5;
+      }
+      else{
+         if (val >= 5)
+            val = val - 5;
+      }
+   } 
+   return com + std::to_string(val);
 }
 
 void 
@@ -35,21 +74,20 @@ UDPMotionServer::StartServer()
   for(;;)
     {
       size_t len = socket.receive_from( boost::asio::buffer(data,maxLength), remoteEP );
-      short m_size = 2;
-      if (len ==6)
-        m_size = 4;
-      std::cout << "Received message of size " << len << std::endl;
       std::string command(data,len);
-      
-      std::string com = command.substr(0,3);
-      std::string val = command.substr(3,m_size);
-     
-      this->ports[com]->set_duty_cycle(CalculatePercentage(val));
-      
-      std::cout << CalculatePercentage(val) << std::endl;
-      std::cout << com << std::endl;
-      std::cout << val << std::endl;
-            
+      std::string com;       
+      std::cout << command << std::endl;
+      if (len > 6)
+         com = MotionByDirection(command.c_str());
+      else
+         com = MotionByPercentage(command, len);
+
+      std::string percentage = com.substr(3,3);
+      com = com.substr(0,3);
+
+      this->ports[com]->pos = percentage;
+      this->ports[com]->set_duty_cycle(CalculateCycle(percentage));
+                  
       std::cout << "Received command " << command << std::endl;
     }
 }
