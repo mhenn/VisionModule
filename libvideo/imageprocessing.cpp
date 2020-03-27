@@ -361,16 +361,18 @@ ImageProcessing::SegmentColours( FrameBuffer * frame,
 	}
     }
 }
+#include <iostream>
 
 void
 ImageProcessing::convertBuffer( FrameBuffer const * frame, 
 				FrameBuffer * outFrame, 
 				unsigned int subSample )
 {
+
   FrameBufferIterator it( frame );
   FrameBufferIterator oit( outFrame );
   RawPixel pPixel;
-
+ 
   for( unsigned int row = 0; row < frame->height; row = row + subSample )
     {
       it.goPosition( row, 0 );

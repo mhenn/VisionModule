@@ -32,7 +32,8 @@ public:
     ShowColours,
     SegmentColours,
     Scanlines,
-    Segmentation
+    Segmentation,
+    Canny
   };
 
   enum VideoControl 

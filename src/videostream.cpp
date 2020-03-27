@@ -45,7 +45,7 @@ using namespace std;
 #include "videostream.h"
 #include "pwmport.h"
 
-using namespace std;
+
 
 struct Command const VideoStream::Commands[] = 
   {
@@ -256,7 +256,9 @@ VideoStream::ProcessFrame( enum ProcessType ptype,
       ImageProcessing::convertBuffer( frame, outFrame, subsample );
     }
 
-
+  if (ptype == Canny){
+   
+   }
   //  unsigned int threshold = mainWindow->sbThreshold->value();
   //unsigned int minimumLineLength = mainWindow->sbMinimumLineLength->value();
   //unsigned int maximumLineLength = mainWindow->sbMaximumLineLength->value();

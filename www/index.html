@@ -18,16 +18,20 @@
 
 <body>
    <h1> Vision and Motion Controller </h1>
-<!--
+
 <div id="video"><noscript><img src="/?action=snapshot" /></noscript> 
   <body onload="InitVisionModule()"></body> 
 
   <canvas id="videocanvas" width="320" height="240" style="border: 1px solid rgb(0, 0, 0);"> </canvas> </div>
 
+<select name="processingMode" onchange="OnChangeProcessingMode()">
+<option value="raw">Raw Mode</option>
+<option value="canny">Canny Edge Detection</option>
+</select>
 
-<div id="hints" style="background-color: green;">
+
+
 Communication Hints </div>
--->
 
 </body>
 </html>
