@@ -46,7 +46,7 @@ vector<PWMPort *> InitPorts(){
    vector<PWMPort*> ports;
    int centre = 1500000 ;
    int period = 5000000 ;
-   vector<int> portnrs{3, 5,6,11};
+   vector<int> portnrs{3, 5,6,1};
 
    for (int nr : portnrs){
       PWMPort* pp = new PWMPort(to_string(nr));

@@ -6,8 +6,8 @@ std::map<string, PWMPort *> InitPorts(){
    vector<PWMPort*> ports;
    int centre = 1500000 ;
    int period = 5000000 ;
-   vector<int> portnrs{3, 5,6,9};
-   vector<string> names{"yaw", "pit", "spe", "ste"};
+   vector<int> portnrs{3, 5,6,1};
+   vector<string> names{"yaw", "pit", "ste", "spe"};
    std::map<string, PWMPort *> mapOfPorts; 
 
    for (unsigned int i = 0; i < portnrs.size(); i++){
