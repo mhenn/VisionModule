@@ -17,7 +17,6 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG -Wall")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 find_package(Boost)
-find_package( OpenCV REQUIRED )
 
 
 configure_file (

@@ -25,136 +25,170 @@ class Configuration;
 
 class VideoStream
 {
-public:
+   public:
 
-  enum ProcessType {
-    Raw,
-    ShowColours,
-    SegmentColours,
-    Scanlines,
-    Segmentation,
-    Canny
-  };
+      enum ProcessType {
+         Raw,
+         ShowColours,
+         SegmentColours,
+         ScanLines,
+         Segmentation,
+         Threshold,
+         Blur,
+         Sharp,
+         Sobel,
+         Huff,
+         Canny,
+         LocalThreshold
+      };
 
-  enum VideoControl 
-  {
-    IllegalControl,
-    Brightness,
-    Hue,
-    Saturation,
-    Contrast,
-    Sharpness,
-    Gain
-  };
+      enum VideoControl 
+      {
+         IllegalControl,
+         Brightness,
+         Hue,
+         Saturation,
+         Contrast,
+         Sharpness,
+         Gain
+      };
 
-  VideoStream(string driver,
-	      string name,
-	      string input,
-	      string standard,
-	      unsigned int fps,
-	      unsigned int width,
-	      unsigned int height,
-	      unsigned int depth,
-	      unsigned int numBuffers,
-	      unsigned int subsample,
-	      int brightness,
-	      int contrast,
-	      int saturation,
-	      int sharpness,
-	      int gain
-	      );
+      VideoStream(string driver,
+            string name,
+            string input,
+            string standard,
+            unsigned int fps,
+            unsigned int width,
+            unsigned int height,
+            unsigned int depth,
+            unsigned int numBuffers,
+            unsigned int subsample,
+            int brightness,
+            int contrast,
+            int saturation,
+            int sharpness,
+            int gain
+            );
 
-  virtual ~VideoStream();
-  
-  static void* server_thread(void * arg);
-  
-  void run( );
-  static void run_trampoline( VideoStream * vs );
-  
-  int input_init();
-  //int input_cmd(in_cmd_type cmd, int value);
-  int sendImage(FrameBuffer * img);
-  
-  //int output_init();
-  //int output_run();
-  
-  void setDone( bool done );
-  bool getDone( void ) const;
-  
-  //  pthread_t               cam;
-  pthread_mutex_t         controls_mutex;
-  
-  void ProcessFrame( enum ProcessType ptype, 
-		     FrameBuffer * frame, 
-		     FrameBuffer * outFrame, 
-		     unsigned int subsample, 
-		     std::vector<ColourDefinition> colours, 
-		     RawPixel mark );
+      virtual ~VideoStream();
 
-  std::string ConvertResultsToString( void ) const;
+      static void* server_thread(void * arg);
 
-  static int CommandProcessingMode( VideoStream * video, char const * command, char * response, unsigned int respLength );
-  static int CommandUpdateColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
-  static int CommandQueryColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
-  static int CommandVideoControl( VideoStream * video, char const * command, char * response, unsigned int respLength );
-  static int CommandQueryColourList( VideoStream * video, char const * command, char * response, unsigned int respLength );
-  static int CommandAddColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
-  static int CommandDeleteColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
-  static int CommandSelectColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
-  static int CommandShutdown( VideoStream * video, char const * command, char * response, unsigned int respLength );
+      void run( );
+      static void run_trampoline( VideoStream * vs );
 
-  std::vector<VisionObject> results;
-  std::string resultString;
+      int input_init();
+      //int input_cmd(in_cmd_type cmd, int value);
+      int sendImage(FrameBuffer * img);
 
- private:
-  VideoDevice * device;
-  struct timeval prev;
-  bool done;
+      //int output_init();
+      //int output_run();
 
- public:
-  pthread_t threadID;
+      void setDone( bool done );
+      bool getDone( void ) const;
 
- public:
-  static struct Command const Commands[];
+      //  pthread_t               cam;
+      pthread_mutex_t         controls_mutex;
 
- private:
-  volatile enum ProcessType mode;
+   private:
+      void ProcessShowColours(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark);
+      void ProcessBlur(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark);
+      void ProcessSharp(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark);
+      void ProcessSobel (FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark); 
+      void ProcessHuff(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark); 
+      void ProcessLocalThreshold(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark);
+      void ProcessSegmentColours(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark);
+      void ProcessCanny(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark);  
+      void ProcessThreshold(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark);  
+      void ProcessScanLines(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark);  
+      void ProcessSegmentation(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+            std::vector<ColourDefinition> colours, RawPixel mark);  
 
- private:
-  void UpdateColour(ColourDefinition const colour );
-  ColourDefinition * GetColour( std::string const & name );
 
- public:
-  enum ProcessType GetMode( void ) const;
-  void SetMode( enum ProcessType mode );
+   public:
+      void ProcessFrame( enum ProcessType ptype, 
+            FrameBuffer * frame, 
+            FrameBuffer * outFrame, 
+            unsigned int subsample, 
+            std::vector<ColourDefinition> colours, 
+            RawPixel mark );
 
- public:
-  void SetColours( std::vector<ColourDefinition> colours );
+      std::string ConvertResultsToString( void ) const;
 
- private:
-  std::vector<ColourDefinition> colours;
+      static int CommandProcessingMode( VideoStream * video, char const * command, char * response, unsigned int respLength );
+      static int CommandUpdateColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
+      static int CommandQueryColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
+      static int CommandVideoControl( VideoStream * video, char const * command, char * response, unsigned int respLength );
+      static int CommandQueryColourList( VideoStream * video, char const * command, char * response, unsigned int respLength );
+      static int CommandAddColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
+      static int CommandDeleteColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
+      static int CommandSelectColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
+      static int CommandShutdown( VideoStream * video, char const * command, char * response, unsigned int respLength );
+ 
+      std::vector<VisionObject> results;
+      std::string resultString;
 
- public:
-  std::vector<ColourDefinition> * nextColours;
+   private:
+      VideoDevice * device;
+      struct timeval prev;
+      bool done;
 
- private:
-  unsigned int subsample;
+   public:
+      pthread_t threadID;
 
- public:
-  unsigned int GetSubsample( void ) const;
-  void SetSubsample( unsigned int subsample );
+   public:
+      static struct Command const Commands[];
 
- public:
-  std::string ReadRunningConfiguration( void );
+   private:
+      volatile enum ProcessType mode;
 
- private:
-  std::string GetColourList( void );
+   private:
+      void UpdateColour(ColourDefinition const colour );
+      ColourDefinition * GetColour( std::string const & name );
+   public:
+      enum ProcessType GetMode( void ) const;
+      void SetMode( enum ProcessType mode );
 
- private:
-  std::string selectedColour;
+   public:
+      void SetColours( std::vector<ColourDefinition> colours );
 
- private:
-  po::options_description configOptions;
+   private:
+      std::vector<ColourDefinition> colours;
+
+   public:
+      std::vector<ColourDefinition> * nextColours;
+
+   private:
+      unsigned int subsample;
+
+   public:
+      unsigned int GetSubsample( void ) const;
+      void SetSubsample( unsigned int subsample );
+
+   public:
+      std::string ReadRunningConfiguration( void );
+
+   private:
+      std::string GetColourList( void );
+
+   private:
+      std::string selectedColour;
+
+   private:
+      po::options_description configOptions;
 };
+
+
+
 
 #endif /* __VIDEOSTREAM_H__ */

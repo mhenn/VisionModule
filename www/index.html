@@ -24,11 +24,16 @@
 
   <canvas id="videocanvas" width="320" height="240" style="border: 1px solid rgb(0, 0, 0);"> </canvas> </div>
 
-<select name="processingMode" onchange="OnChangeProcessingMode()">
+<select id="processingMode" onchange="OnChangeProcessingMode()">
 <option value="raw">Raw Mode</option>
-<option value="canny">Canny Edge Detection</option>
+<option value="threshold">Threshholding</option>
+<option value="blur">Blur</option>
+<option value="sharp">Sharpen</option>
+<option value="sobel">Sobel Edge</option>
+<option value="canny">Canny Edge</option>
+<option value="huff">Huff</option>
+<option value="local_threshold">Local Adaptive Thresholding</option>
 </select>
-
 
 
 Communication Hints </div>

@@ -361,7 +361,36 @@ ImageProcessing::SegmentColours( FrameBuffer * frame,
 	}
     }
 }
-#include <iostream>
+
+
+void 
+ImageProcessing::binarization(FrameBuffer * frame,
+                           FrameBuffer * outFrame,
+                           unsigned int subSample, unsigned int threshold)
+{
+   FrameBufferIterator it( frame );
+   RawPixel pPixel;
+
+   for( unsigned int row = 0; row < frame->height; row = row + subSample )
+   {
+      it.goPosition( row, 0 );
+
+      for( unsigned int col = subSample; col < frame->width; col = col + subSample, it.goRight( subSample ))
+      {
+         it.getPixel( & pPixel );
+         // ((0.3 * R) +(0.59*G)+(0.11*B))/ 255 
+         int R = pPixel.red; int G = pPixel.green; int B = pPixel.blue;
+         int grey =  ((0.3 * R) + (0.59 * G ) + (0.11*B)) > threshold ? 255 : 0;
+         pPixel.red = grey;
+         pPixel.blue = grey;
+         pPixel.green = grey;
+         it.setPixel( pPixel );
+      }
+   }
+   convertBuffer(frame,outFrame,subSample);
+}
+
+
 
 void
 ImageProcessing::convertBuffer( FrameBuffer const * frame, 
