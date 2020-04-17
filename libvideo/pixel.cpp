@@ -193,6 +193,13 @@ RawPixel::operator+=( RawPixel const & p1 )
   return *this;
 }
 
+RawPixel &
+RawPixel::operator+=(double & p){
+   red += p;
+   green +=  p;
+   blue +=  p;
+}
+
 void
 RawPixel::adjustContrast( RawPixel min, RawPixel max )
 {
@@ -395,6 +402,7 @@ Pixel::operator+=( Pixel const & p1 )
 
   return *this;
 }
+
 
 Pixel const 
 operator/( Pixel const & p, double const n )

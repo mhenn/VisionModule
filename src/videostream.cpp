@@ -271,16 +271,40 @@ void VideoStream::ProcessBlur(
       unsigned int subSample, 
       std::vector<ColourDefinition> colours,
       RawPixel mark)
-{}
-void VideoStream::ProcessSobel(
+{
+      double kernel_blu[9] =
+      {
+         0.0,   0.125,  0.0,
+         0.125, 0.5,   0.125,
+         0.0,   0.125, 0.0,
+      };
+      
+      double kernel_blur[9] =
+      {
+         0.0625,   0.125,  0.0625,
+         0.125, 0.25,   0.125,
+         0.0625,   0.125, 0.0625,
+      };
+      ImageProcessing::convolution(frame,outFrame,subSample,kernel_blur);
+    
+}
+void VideoStream::ProcessSharp(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
       unsigned int subSample, 
       std::vector<ColourDefinition> colours,
       RawPixel mark)
 {
+     double kernel_sharpen[9] =
+      {
+         0.0,  -1.0,  0.0,
+         -1.0,  5.0, -1.0,
+         0.0,  -1.0,  0.0,
+      };
+
+      ImageProcessing::convolution(frame,outFrame,subSample,kernel_sharpen);
 }
-void VideoStream::ProcessSharp(
+void VideoStream::ProcessSobel(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
       unsigned int subSample, 
@@ -347,13 +371,12 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
       ProcessThreshold(frame, outFrame, subSample, colours, mark);  
 
    if (ptype == Blur)
-      ProcessBlur(frame, outFrame, subSample, colours, mark);  
-
+      ProcessBlur(frame,outFrame,subSample,colours,mark);
    if (ptype == Sharp)
       ProcessSharp(frame, outFrame, subSample, colours, mark);  
 
    if (ptype == Sobel)
-      ProcessSobel(frame, outFrame, subSample, colours, mark);  
+      ImageProcessing::sobel(frame,outFrame,subSample); 
 
    if (ptype == Huff)
       ProcessHuff(frame, outFrame, subSample, colours, mark);  

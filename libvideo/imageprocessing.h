@@ -27,7 +27,6 @@ class ImageProcessing {
          INVALID_SEED_POINT,
          STACK_OVERFLOW
       };
-
       static void segmentScanLines( FrameBuffer * frame, FrameBuffer * outFrame, unsigned int threshold, unsigned int minLength, unsigned int maxLength, unsigned int minSize, RawPixel const & mark, unsigned int subsample, ColourDefinition const * target );
       static void SegmentColours( FrameBuffer * frame, FrameBuffer * outFrame, unsigned int threshold, unsigned int minLength, unsigned int minSize, unsigned int subSample, ColourDefinition const & target, RawPixel const & mark, std::vector<VisionObject> & results );
 
@@ -55,9 +54,11 @@ class ImageProcessing {
 
       static void convertBuffer( FrameBuffer const * frame, FrameBuffer * outFrame, unsigned int subSample = 1);
       static void binarization(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, unsigned int threshold);
+static void convolution(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, double pKernel[9]);
+static void sobel(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample);
+static void toGreyScale(FrameBuffer* frame, unsigned int subSample);
 
-
-      };
+};
 
 
 #endif
