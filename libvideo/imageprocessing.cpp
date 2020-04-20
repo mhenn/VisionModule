@@ -406,17 +406,12 @@ ImageProcessing::toGreyScale(FrameBuffer * frame,
 }
 
 
-
-
-
-   void 
+void 
 ImageProcessing::convolution(FrameBuffer * frame,
       FrameBuffer * outFrame,
       unsigned int subSample,
       double  pKernel[9])
 {
-   toGreyScale(frame, subSample);
-
    FrameBufferIterator oit( outFrame );
    RawPixel pPixel;
 
@@ -426,15 +421,14 @@ ImageProcessing::convolution(FrameBuffer * frame,
       for( unsigned int col = subSample; col < frame->width; col = col + subSample, oit.goRight(subSample))
       {
          RawPixel sumP = RawPixel(0,0,0);
-         for (int x = -1; x < +2; x++)
-            for (int y = -1; y < +2; y++){
+         for (int x = -1; x < 2; x++)
+            for (int y = -1; y < 2; y++){
                if (x + col >= 0 && y + row >= 0){
                   RawPixel p;
                   frame->getPixel(row+y, col+x ,&p);
                   sumP += p * pKernel[(y+1) * 3+ (x)];
                }
             }
-
          oit.setPixel(sumP);
       }
    }
@@ -448,6 +442,7 @@ ImageProcessing::sobel(FrameBuffer * frame,
       FrameBuffer * outFrame,
       unsigned int subSample)
 {
+   toGreyScale(frame, subSample);
    FrameBufferIterator oit( outFrame );
    RawPixel pPixel;
 

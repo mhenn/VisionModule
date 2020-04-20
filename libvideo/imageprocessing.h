@@ -17,7 +17,7 @@ class FloodFillState;
 class FrameBuffer;
 class IntegralImage;
 
-class ImageProcessing {  
+class ImageProcessing { 
    public:
 
       enum ErrorCode
