@@ -57,7 +57,6 @@ class ImageProcessing {
 static void convolution(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, double pKernel[9]);
 static void sobel(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample);
 static void toGreyScale(FrameBuffer* frame, unsigned int subSample);
-
 };
 
 

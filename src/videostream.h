@@ -93,22 +93,15 @@ class VideoStream
    private:
       void ProcessShowColours(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);
-      void ProcessBlur(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
-            std::vector<ColourDefinition> colours, RawPixel mark);
-      void ProcessSharp(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
-            std::vector<ColourDefinition> colours, RawPixel mark);
-      void ProcessSobel (FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
-            std::vector<ColourDefinition> colours, RawPixel mark); 
-      void ProcessHuff(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
-            std::vector<ColourDefinition> colours, RawPixel mark); 
-      void ProcessLocalThreshold(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
-            std::vector<ColourDefinition> colours, RawPixel mark);
+      void ProcessBlur(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);
+      void ProcessSharp(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);
+      void ProcessSobel (FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample); 
+      void ProcessHuff(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample); 
+      void ProcessLocalThreshold(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);
       void ProcessSegmentColours(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);
-      void ProcessCanny(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
-            std::vector<ColourDefinition> colours, RawPixel mark);  
-      void ProcessThreshold(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
-            std::vector<ColourDefinition> colours, RawPixel mark);  
+      void ProcessCanny(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);  
+      void ProcessThreshold(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);  
       void ProcessScanLines(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);  
       void ProcessSegmentation(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,

@@ -268,9 +268,7 @@ void VideoStream::ProcessScanLines(
 void VideoStream::ProcessBlur(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subSample, 
-      std::vector<ColourDefinition> colours,
-      RawPixel mark)
+      unsigned int subSample)
 {
       
       double kernel_blur[9] =
@@ -290,28 +288,16 @@ void VideoStream::ProcessBlur(
 
 
       ImageProcessing::toGreyScale(frame,subSample);
-      FrameBuffer* tmp = new FrameBufferRGB24();
-      uint8_t *p = frame->buffer;
-      uint32_t pc = frame->width * frame->bytesPerLine * frame->height * frame->bytesPerPixel;
-      tmp->buffer = new uint8_t[pc]; 
-      //std::memcpy(frame->buffer, tmp->buffer, pc);
-      /*for(;){
-         for(uint8_t i = 0; i < 3; i++){
-            *tp++ = *p++;
-         }
-      }*/
-      //FrameBuffer* tmp1 = new FrameBufferRGB24();
-     // const FrameBuffer* tmp2 = frame; 
-     // tmp1->initFromOther(*tmp2);
-      //ImageProcessing::convolution(frame,outFrame,subSample,kernel_blur);
-      ImageProcessing::convertBuffer(frame,outFrame,subSample);    
+      FrameBuffer* tmp = new FrameBufferRGB24BE();
+      tmp->initialize( frame->width, frame->height );
+      ImageProcessing::convertBuffer(frame,tmp,subSample);
+      ImageProcessing::convolution(frame,outFrame,subSample,kernel_blur);
+      ImageProcessing::convertBuffer(tmp,outFrame,subSample);    
 }
 void VideoStream::ProcessSharp(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subSample, 
-      std::vector<ColourDefinition> colours,
-      RawPixel mark)
+      unsigned int subSample)
 {
      double kernel_sharpen[9] =
       {
@@ -325,40 +311,52 @@ void VideoStream::ProcessSharp(
 void VideoStream::ProcessSobel(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subSample, 
-      std::vector<ColourDefinition> colours,
-      RawPixel mark)
+      unsigned int subSample)
 {
+
+
+   double kernel_blur[9] =
+   {
+      0.0625,   0.125,  0.0625,
+      0.125, 0.25,   0.125,
+      0.0625,   0.125, 0.0625,
+   };
+   ImageProcessing::toGreyScale(frame,subSample);
+
+   FrameBuffer* tmp = new FrameBufferRGB24BE();
+   tmp->initialize( frame->width, frame->height );
+   FrameBuffer* tmp2 = new FrameBufferRGB24BE();
+   tmp2->initialize( frame->width, frame->height );
+
+
+   ImageProcessing::convertBuffer(frame,tmp,subSample);
+   ImageProcessing::convolution(tmp,tmp2,subSample,kernel_blur);
+
+   ImageProcessing::sobel(tmp,tmp2,subSample);
+   ImageProcessing::convertBuffer(tmp2,outFrame,subSample);    
+
 }
 
 void VideoStream::ProcessThreshold(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subSample, 
-      std::vector<ColourDefinition> colours,
-      RawPixel mark)
+      unsigned int subSample)
 {
-   ImageProcessing::binarization(frame,outFrame,subSample,128);
+   ImageProcessing::binarization(frame,outFrame,subSample,110);
 }
 
 void VideoStream::ProcessHuff(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subsample, 
-      std::vector<ColourDefinition> colours,
-      RawPixel mark){}
+      unsigned int subsample){}
 void VideoStream::ProcessCanny(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subsample, 
-      std::vector<ColourDefinition> colours,
-      RawPixel mark){}
+      unsigned int subsample){}
 void VideoStream::ProcessLocalThreshold(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subsample, 
-      std::vector<ColourDefinition> colours,
-      RawPixel mark){}
+      unsigned int subsample){}
 
 void VideoStream::ProcessSegmentation(
       FrameBuffer * frame, 
@@ -386,27 +384,27 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
       ProcessShowColours(frame, outFrame, subSample, colours, mark);
    
    if (ptype == Threshold)
-      ProcessThreshold(frame, outFrame, subSample, colours, mark);  
+      ProcessThreshold(frame, outFrame, subSample);  
 
    if (ptype == Blur)
-      ProcessBlur(frame,outFrame,subSample,colours,mark);
+      ProcessBlur(frame,outFrame,subSample);
    if (ptype == Sharp)
-      ProcessSharp(frame, outFrame, subSample, colours, mark);  
+      ProcessSharp(frame, outFrame, subSample);  
 
    if (ptype == Sobel)
-      ImageProcessing::sobel(frame,outFrame,subSample); 
+      ProcessSobel(frame,outFrame,subSample); 
 
    if (ptype == Huff)
-      ProcessHuff(frame, outFrame, subSample, colours, mark);  
+      ProcessHuff(frame, outFrame, subSample);  
 
    if (ptype == LocalThreshold)
-      ProcessLocalThreshold(frame, outFrame, subSample, colours, mark);  
+      ProcessLocalThreshold(frame, outFrame, subSample);  
 
    if ( ptype == SegmentColours )
       ProcessSegmentColours(frame, outFrame, subSample, colours, mark);
 
    if (ptype == Canny)
-      ProcessCanny(frame, outFrame, subSample, colours, mark);  
+      ProcessCanny(frame, outFrame, subSample);  
 
    if ( ptype == ScanLines )
       ProcessSegmentColours(frame, outFrame, subSample, colours, mark);  

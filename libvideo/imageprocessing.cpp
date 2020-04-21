@@ -426,7 +426,7 @@ ImageProcessing::convolution(FrameBuffer * frame,
                if (x + col >= 0 && y + row >= 0){
                   RawPixel p;
                   frame->getPixel(row+y, col+x ,&p);
-                  sumP += p * pKernel[(y+1) * 3+ (x)];
+                  sumP += p * pKernel[(x+1) * 3 + (y + 1)];
                }
             }
          oit.setPixel(sumP);
@@ -442,10 +442,8 @@ ImageProcessing::sobel(FrameBuffer * frame,
       FrameBuffer * outFrame,
       unsigned int subSample)
 {
-   toGreyScale(frame, subSample);
    FrameBufferIterator oit( outFrame );
    RawPixel pPixel;
-
 
    double kernel_sobel_v[9] =
    {
@@ -461,7 +459,6 @@ ImageProcessing::sobel(FrameBuffer * frame,
       +1.0, +2.0, +1.0,
    };
 
-
    for( unsigned int row = 0; row < frame->height; row = row + subSample )
    {
       oit.goPosition(row, 0 );
@@ -476,14 +473,15 @@ ImageProcessing::sobel(FrameBuffer * frame,
                if (x + col >= 0 && y + row >= 0){
                   RawPixel h,v;
                   frame->getPixel(row+y, col+x ,&v);
-                  frame->getPixel(row+y, col+x ,&v);
-                  sumH += h * kernel_sobel_h[(y+1) * 3+ (x)];
-                  sumV += v * kernel_sobel_v[(y+1) * 3+ (x)];
+                  frame->getPixel(row+y, col+x ,&h);
+                  sumH += h * kernel_sobel_h[(x+1) * 3+ (y+1)];
+                  sumV += v * kernel_sobel_v[(x+1) * 3+ (y+1)];
                }
             }
-         RawPixel s = sumH + sumV;
-         s = s * 0.5;
-         oit.setPixel(s);
+         //RawPixel s = sumH + sumV;
+         //s = s * 0.5;
+         int f = sqrt(sumH.red *sumH.red + sumV.red * sumV.red);
+         oit.setPixel(RawPixel(f,f,f));
       }
    }
 
@@ -495,8 +493,6 @@ ImageProcessing::convertBuffer( FrameBuffer const * frame,
       FrameBuffer * outFrame, 
       unsigned int subSample )
 {
-
-
    FrameBufferIterator it( frame );
    FrameBufferIterator oit( outFrame );
    RawPixel pPixel;
