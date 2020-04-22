@@ -306,6 +306,7 @@ void VideoStream::ProcessSharp(
          0.0,  -1.0,  0.0,
       };
 
+      ImageProcessing::toGreyScale(frame,subSample);
       ImageProcessing::convolution(frame,outFrame,subSample,kernel_sharpen);
 }
 void VideoStream::ProcessSobel(
@@ -407,7 +408,8 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
       ProcessCanny(frame, outFrame, subSample);  
 
    if ( ptype == ScanLines )
-      ProcessSegmentColours(frame, outFrame, subSample, colours, mark);  
+      ImageProcessing::scanLines(frame,outFrame,subSample);
+      //ProcessSegmentColours(frame, outFrame, subSample, colours, mark);  
 
    if ( ptype == Segmentation )
       ProcessSegmentation(frame, outFrame, subSample, colours, mark);  

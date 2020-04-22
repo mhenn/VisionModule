@@ -35,7 +35,9 @@ class RawPixel
 
   RawPixel & operator+=( RawPixel const & p );
   RawPixel & operator+=( double & p );
+  friend bool const operator<(RawPixel const& p1,  RawPixel const& p2);
   friend RawPixel const operator+( RawPixel const & p1, RawPixel const & p2 );
+  friend RawPixel const operator-(RawPixel const& p1, RawPixel const& p2);
   friend RawPixel const operator/( RawPixel const & p, double const n );
   friend RawPixel const operator*( RawPixel const & p, double const n );
   friend std::ostream & operator<<( std::ostream & os, RawPixel & p );

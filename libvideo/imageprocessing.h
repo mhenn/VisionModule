@@ -55,6 +55,7 @@ class ImageProcessing {
       static void convertBuffer( FrameBuffer const * frame, FrameBuffer * outFrame, unsigned int subSample = 1);
       static void binarization(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, unsigned int threshold);
 static void convolution(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, double pKernel[9]);
+static void scanLines(FrameBuffer* frame, FrameBuffer* outFrame, unsigned int subSample);
 static void sobel(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample);
 static void toGreyScale(FrameBuffer* frame, unsigned int subSample);
 };

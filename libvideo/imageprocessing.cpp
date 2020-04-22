@@ -423,7 +423,9 @@ ImageProcessing::convolution(FrameBuffer * frame,
          RawPixel sumP = RawPixel(0,0,0);
          for (int x = -1; x < 2; x++)
             for (int y = -1; y < 2; y++){
-               if (x + col >= 0 && y + row >= 0){
+               int currx = x+col;
+               int curry = y+row;
+               if (currx >= 0 && curry >= 0 && currx < frame->width && curry < frame->height ){
                   RawPixel p;
                   frame->getPixel(row+y, col+x ,&p);
                   sumP += p * pKernel[(x+1) * 3 + (y + 1)];
@@ -470,7 +472,9 @@ ImageProcessing::sobel(FrameBuffer * frame,
          RawPixel sumV = RawPixel(0,0,0);
          for (int x = -1; x < +2; x++)
             for (int y = -1; y < +2; y++){
-               if (x + col >= 0 && y + row >= 0){
+               int currx = x+col;
+               int curry = y+row;
+               if (currx >= 0 && curry >= 0 && currx < frame->width && curry < frame->height ){
                   RawPixel h,v;
                   frame->getPixel(row+y, col+x ,&v);
                   frame->getPixel(row+y, col+x ,&h);
@@ -484,8 +488,47 @@ ImageProcessing::sobel(FrameBuffer * frame,
          oit.setPixel(RawPixel(f,f,f));
       }
    }
-
 }
+
+void 
+ImageProcessing::scanLines(FrameBuffer* frame, FrameBuffer* outFrame, unsigned int subSample){
+
+   uint8_t min = 3;
+   RawPixel threshold = RawPixel(7,20,15);
+
+   for (uint32_t y = 0; y < frame->width;y++ ){
+
+      RawPixel prev;
+      frame->getPixel(y,0,&prev);
+      int start = 0;
+      RawPixel sum = RawPixel(0,0,0);
+
+      for(uint32_t x = 0; x < frame->width + 1; x++){
+         RawPixel p;
+         if (x < frame->width)
+            frame->getPixel(x,y,&p);  
+         else
+            p = RawPixel(0,0,0);
+         if ( (prev - p) < threshold )
+            sum += p;
+         else{
+            int length = x -start;
+            if (length > min){
+               RawPixel avg = sum / length;
+
+               for(int k =start; k <x; k++)
+                  outFrame->setPixel(k,y,avg );
+            }
+            start = x;
+            sum = RawPixel(0,0,0);
+         }
+         prev =p;
+      }
+   }
+} 
+
+
+
 
 
    void
