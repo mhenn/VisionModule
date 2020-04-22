@@ -194,6 +194,12 @@ operator<(RawPixel const& p1, RawPixel const& p2){
    return p1.red < p2.red && p1.green < p2.green && p1.blue < p2.blue;
 }
 
+bool const
+operator>(RawPixel const& p1, RawPixel const& p2){
+   return p1.red > p2.red && p1.green > p2.green && p1.blue > p2.blue;
+}
+
+
 RawPixel &
 RawPixel::operator+=( RawPixel const & p1 )
 {

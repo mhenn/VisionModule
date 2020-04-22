@@ -405,8 +405,35 @@ ImageProcessing::toGreyScale(FrameBuffer * frame,
    }
 }
 
-
 void 
+ImageProcessing::localThreshold(FrameBuffer* frame, FrameBuffer* outFrame, int subSample){
+   double bias = 1.5;
+
+   for( unsigned int row = 0; row < frame->width; row = row + subSample )
+   {
+      for( unsigned int col = subSample; col < frame->height; col = col + subSample)
+      {  
+         RawPixel p;
+         RawPixel regionSum = RawPixel(0,0,0);
+         for (int x = -2; x < +3; x++){
+            for (int y = -2; y < +3; y++){
+               int currx = row+x;
+               int curry = col+y;
+               if (currx >= 0 && curry >= 0 && currx < frame->width && curry < frame->height ){
+                  frame->getPixel(currx,curry,&p);
+                  regionSum += p;
+               }
+                             
+               regionSum = regionSum / 25.0;
+               frame->getPixel(col,row,&p);
+               outFrame->setPixel(col,row, p > (regionSum * bias) ? RawPixel(0,0,0) : RawPixel(255,255,255));
+            }
+         }
+      }
+   }
+}
+
+   void 
 ImageProcessing::convolution(FrameBuffer * frame,
       FrameBuffer * outFrame,
       unsigned int subSample,

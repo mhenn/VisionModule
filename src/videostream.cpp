@@ -399,7 +399,7 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
       ProcessHuff(frame, outFrame, subSample);  
 
    if (ptype == LocalThreshold)
-      ProcessLocalThreshold(frame, outFrame, subSample);  
+      ImageProcessing::localThreshold(frame, outFrame, subSample);  
 
    if ( ptype == SegmentColours )
       ProcessSegmentColours(frame, outFrame, subSample, colours, mark);
