@@ -366,7 +366,7 @@ ImageProcessing::SegmentColours( FrameBuffer * frame,
    void 
 ImageProcessing::binarization(FrameBuffer * frame,
       FrameBuffer * outFrame,
-      unsigned int subSample, unsigned int threshold)
+      unsigned int subSample, uint32_t lowerThreshold, uint32_t upperThreshold )
 {
    FrameBufferIterator it( frame );
    RawPixel pPixel;
@@ -374,13 +374,15 @@ ImageProcessing::binarization(FrameBuffer * frame,
    for( unsigned int row = 0; row < frame->height; row = row + subSample )
    {
       it.goPosition( row, 0 );
-
       for( unsigned int col = subSample; col < frame->width; col = col + subSample, it.goRight( subSample ))
       {
          it.getPixel( & pPixel );
          int R = pPixel.red; int G = pPixel.green; int B = pPixel.blue;
-         int grey =  ((0.3 * R) + (0.59 * G ) + (0.11*B)) > threshold ? 255 : 0;
-         RawPixel p = RawPixel(grey,grey,grey); 
+        
+         uint32_t grey =  ((0.3 * R) + (0.59 * G ) + (0.11*B));
+
+         int c = grey < upperThreshold &&  grey > lowerThreshold ? 255 : 0;
+         RawPixel p = RawPixel(c,c,c); 
          it.setPixel( p );
       }
    }

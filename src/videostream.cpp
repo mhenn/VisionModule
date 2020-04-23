@@ -343,7 +343,7 @@ void VideoStream::ProcessThreshold(
       FrameBuffer * outFrame, 
       unsigned int subSample)
 {
-   ImageProcessing::binarization(frame,outFrame,subSample,110);
+   ImageProcessing::binarization(frame,outFrame,subSample,10,110);
 }
 
 void VideoStream::ProcessHuff(

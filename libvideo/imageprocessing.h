@@ -20,6 +20,7 @@ class IntegralImage;
 class ImageProcessing { 
    public:
 
+
       enum ErrorCode
       {
          NO_ERROR = 0,
@@ -53,7 +54,7 @@ class ImageProcessing {
       static void calcQuadTreeDecomposition( FrameBuffer const * inFrame, FrameBuffer * outFrame, IntegralImage const * integralImage );
 
       static void convertBuffer( FrameBuffer const * frame, FrameBuffer * outFrame, unsigned int subSample = 1);
-      static void binarization(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, unsigned int threshold);
+      static void binarization(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, uint32_t lowerThreshold, uint32_t upperThreshold);
 static void convolution(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, double pKernel[9]);
 static void localThreshold(FrameBuffer* frame, FrameBuffer* outFrame, int subSample); 
 static void scanLines(FrameBuffer* frame, FrameBuffer* outFrame, unsigned int subSample);
