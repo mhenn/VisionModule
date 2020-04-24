@@ -78,7 +78,7 @@ VideoStream::VideoStream(string driver,
       int sharpness,
       int gain
       )
-: done( true ),
+   : done( true ),
    mode( VideoStream::SegmentColours ),
    subsample( subsample )
 {
@@ -270,44 +270,44 @@ void VideoStream::ProcessBlur(
       FrameBuffer * outFrame, 
       unsigned int subSample)
 {
-      
-      double kernel_blur[9] =
-      {
-         0.0625,   0.125,  0.0625,
-         0.125, 0.25,   0.125,
-         0.0625,   0.125, 0.0625,
-      };/*
-      double kernel_blur[25] =
-      {
-         0.003663004,0.014652015 , 0.025641026, 0.014652015, 0.003663004,
-         0.014652015,0.058608059,0.095238095,0.058608059,0.014652015,
-         0.025641026,0.095238095,0.15018315,0.095238095,0.025641026,
-         0.014652015,0.058608059,0.095238095,0.058608059,0.014652015,
-         0.003663004,0.014652015,0.025641026,0.014652015,0.003663004,
-      };*/
+
+   double kernel_blur[9] =
+   {
+      0.0625,   0.125,  0.0625,
+      0.125, 0.25,   0.125,
+      0.0625,   0.125, 0.0625,
+   };/*
+        double kernel_blur[25] =
+        {
+        0.003663004,0.014652015 , 0.025641026, 0.014652015, 0.003663004,
+        0.014652015,0.058608059,0.095238095,0.058608059,0.014652015,
+        0.025641026,0.095238095,0.15018315,0.095238095,0.025641026,
+        0.014652015,0.058608059,0.095238095,0.058608059,0.014652015,
+        0.003663004,0.014652015,0.025641026,0.014652015,0.003663004,
+        };*/
 
 
-      ImageProcessing::toGreyScale(frame,subSample);
-      FrameBuffer* tmp = new FrameBufferRGB24BE();
-      tmp->initialize( frame->width, frame->height );
-      ImageProcessing::convertBuffer(frame,tmp,subSample);
-      ImageProcessing::convolution(frame,outFrame,subSample,kernel_blur);
-      ImageProcessing::convertBuffer(tmp,outFrame,subSample);    
+   ImageProcessing::toGreyScale(frame,subSample);
+   FrameBuffer* tmp = new FrameBufferRGB24BE();
+   tmp->initialize( frame->width, frame->height );
+   ImageProcessing::convertBuffer(frame,tmp,subSample);
+   ImageProcessing::convolution(frame,outFrame,subSample,kernel_blur);
+   ImageProcessing::convertBuffer(tmp,outFrame,subSample);    
 }
 void VideoStream::ProcessSharp(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
       unsigned int subSample)
 {
-     double kernel_sharpen[9] =
-      {
-         0.0,  -1.0,  0.0,
-         -1.0,  5.0, -1.0,
-         0.0,  -1.0,  0.0,
-      };
+   double kernel_sharpen[9] =
+   {
+      0.0,  -1.0,  0.0,
+      -1.0,  5.0, -1.0,
+      0.0,  -1.0,  0.0,
+   };
 
-      ImageProcessing::toGreyScale(frame,subSample);
-      ImageProcessing::convolution(frame,outFrame,subSample,kernel_sharpen);
+   ImageProcessing::toGreyScale(frame,subSample);
+   ImageProcessing::convolution(frame,outFrame,subSample,kernel_sharpen);
 }
 void VideoStream::ProcessSobel(
       FrameBuffer * frame, 
@@ -383,7 +383,7 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
 
    if ( ptype == ShowColours )
       ProcessShowColours(frame, outFrame, subSample, colours, mark);
-   
+
    if (ptype == Threshold)
       ProcessThreshold(frame, outFrame, subSample);  
 
@@ -395,7 +395,7 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
    if (ptype == Sobel)
       ProcessSobel(frame,outFrame,subSample); 
 
-   if (ptype == Huff)
+   if (ptype == Hough)
       ProcessHuff(frame, outFrame, subSample);  
 
    if (ptype == LocalThreshold)
@@ -409,7 +409,7 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
 
    if ( ptype == ScanLines )
       ImageProcessing::scanLines(frame,outFrame,subSample);
-      //ProcessSegmentColours(frame, outFrame, subSample, colours, mark);  
+   //ProcessSegmentColours(frame, outFrame, subSample, colours, mark);  
 
    if ( ptype == Segmentation )
       ProcessSegmentation(frame, outFrame, subSample, colours, mark);  
@@ -478,10 +478,10 @@ VideoStream::sendImage(FrameBuffer * img)
     HTTPD::server_thread(arg);
     return NULL;
     }
- */
-
+    */
+#include <string.h>
 // Make sure that these match the ProcessType enum above.
-static char const * processTypeStrings[] = 
+static std::string processTypeStrings[] = 
 {
    "raw",
    "showcolours",
@@ -492,10 +492,14 @@ static char const * processTypeStrings[] =
    "blur",
    "sharp",
    "sobel",
-   "huff",
+   "hough",
    "canny",
+   "historgram",
+   "integral",
    "local_threshold"
 };
+
+
 
    int
 VideoStream::CommandProcessingMode( VideoStream * video, char const * command, char * response, unsigned int respLength )
@@ -503,9 +507,19 @@ VideoStream::CommandProcessingMode( VideoStream * video, char const * command, c
    int ret = COMMAND_ERR_COMMAND;
    char const * s;
    //  enum ProcessType processMode;
-   #include <iostream>
    response[0] = '\0';
-   std::cout << "WHADAHECK" << std::endl;
+   int size = sizeof(processTypeStrings) / sizeof(processTypeStrings[0]);
+   auto ModeSet = [&](VideoStream* video, char const* s,  std::string type, uint8_t i)
+   {
+      const char* t = type.c_str();
+      if ( ! strncmp(t,s, type.length() ) )
+      {
+         video->SetMode((ProcessType)i);
+         return COMMAND_ERR_OK;
+      }
+      return COMMAND_ERR_COMMAND;
+   };
+
    if ( ( s = strstr(command, "command=processingmode") ) != NULL )
    {
       if ( ( s = strstr(s, "mode=") ) != NULL ) 
@@ -515,55 +529,27 @@ VideoStream::CommandProcessingMode( VideoStream * video, char const * command, c
          {
             ret = COMMAND_ERR_OK;
          }
-         else if ( ! strncmp("raw",s, strlen("raw") ) )
-         {
-            video->SetMode(Raw);
-            ret = COMMAND_ERR_OK;
+
+         for(uint8_t i= 0; i <  size; i++){
+            std::string type = processTypeStrings[i];
+            ret = ModeSet(video, s,type,i);
+            if (ret == COMMAND_ERR_OK)
+               continue;
          }
-         else if ( ! strncmp("showcolours", s, strlen("showcolours") ) )
+
+
+         if ( ret == COMMAND_ERR_OK ) 
          {
-            video->SetMode(ShowColours);
-            ret = COMMAND_ERR_OK;
-         }
-         else if ( ! strncmp("segmentcolours", s, strlen("segmentcolours") ) )
-         {
-            video->SetMode(SegmentColours);
-            ret = COMMAND_ERR_OK;
-         }else if ( ! strncmp("threshold", s, strlen("threshold") ) )
-         {
-            DBG("THRESHI");
-            video->SetMode(Threshold);
-            ret = COMMAND_ERR_OK;
-         }else if ( ! strncmp("scanlines", s, strlen("scanlines") ) )
-         {
-            video->SetMode(ScanLines);
-            ret = COMMAND_ERR_OK;
-         }else if ( ! strncmp("canny", s, strlen("canny") ) )
-         {
-            video->SetMode(Canny);
-            ret = COMMAND_ERR_OK;
-         }else if ( ! strncmp("blur", s, strlen("blur") ) )
-         {
-            video->SetMode(Blur);
-            ret = COMMAND_ERR_OK;
-         }else if ( ! strncmp("sharp", s, strlen("sharp") ) )
-         {
-            video->SetMode(Sharp);
-            ret = COMMAND_ERR_OK;
-         }else if ( ! strncmp("sobel", s, strlen("sobel") ) )
-         {
-            video->SetMode(Sobel);
-            ret = COMMAND_ERR_OK;
-         }else if ( ! strncmp("huff", s, strlen("huff") ) )
-         {
-            video->SetMode(Huff);
-            ret = COMMAND_ERR_OK;
-         }else if ( ! strncmp("local_threshold", s, strlen("local_threshold") ) )
-         {
-            video->SetMode(LocalThreshold);
-            ret = COMMAND_ERR_OK;
-         }
-         else
+            unsigned int m = static_cast<unsigned int>( video->GetMode() );
+            char const * ms;
+
+            if ( ( m >= 0 ) && ( m < ( sizeof(processTypeStrings)/sizeof(processTypeStrings[0] ) ) ) )
+            {
+               ms = processTypeStrings[m].c_str();
+            }
+            snprintf(response, respLength - 1, "processingmode=%s", ms );
+            response[respLength-1] = '\0';
+         } else
          {
             strncpy(response, "processingmode: ERR_PARAMETER", respLength - 1);
             response[respLength - 1] = '\0';
@@ -571,672 +557,658 @@ VideoStream::CommandProcessingMode( VideoStream * video, char const * command, c
          }
 
       }
-
-      if ( ret == COMMAND_ERR_OK ) 
-      {
-         unsigned int m = static_cast<unsigned int>( video->GetMode() );
-         char const * ms;
-
-         if ( ( m >= 0 ) && ( m < ( sizeof(processTypeStrings)/sizeof(processTypeStrings[0] ) ) ) )
-         {
-            ms = processTypeStrings[m];
-         }
-         snprintf(response, respLength - 1, "processingmode=%s", ms );
-         response[respLength-1] = '\0';
-      }
+      return ret;
    }
-   return ret;
-}
 
    int VideoStream::CommandUpdateColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
-{
-   int ret = COMMAND_ERR_COMMAND;
-   char const * s;
-   ColourDefinition colour;
-   response[0] = '\0';
-
-   if ( ( s = strstr(command, "command=updatecolour") ) != NULL )
    {
-      s = s + strlen("command=updatecolour");
+      int ret = COMMAND_ERR_COMMAND;
+      char const * s;
+      ColourDefinition colour;
+      response[0] = '\0';
 
-      std::string col(s);
-      std::stringstream is(col);
-
-      is.ignore(1,'&');
-      is >> colour;
-      if ( ! is.fail() )
+      if ( ( s = strstr(command, "command=updatecolour") ) != NULL )
       {
-         DBG("update colour %s\n", colour.name.c_str() );
+         s = s + strlen("command=updatecolour");
 
-         video->UpdateColour( colour );
+         std::string col(s);
+         std::stringstream is(col);
 
-         strncpy(response,"colour OK", respLength - 1 );
-         response[respLength-1] = '\0';
-         ret = COMMAND_ERR_OK;
-      }
-      else
-      {
-         strncpy(response,"colour BAD", respLength - 1 );
-         response[respLength-1] = '\0';
-         ret = COMMAND_ERR_PARAMETER;
-      }
-   }
-   return ret;
-}
-
-   int
-VideoStream::CommandQueryColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
-{
-   int ret = COMMAND_ERR_COMMAND;
-   char const * s;
-   char const * start;
-   size_t len;
-
-   std::string name;
-
-   response[0] = '\0';
-
-   if ( ( s = strstr(command, "command=querycolour") ) != NULL )
-   {
-      s = s + strlen("command=querycolour");
-
-      if ( ( s = strstr(s,"colour=") ) != NULL ) 
-      {
-         s = s + strlen("colour=");
-         start = s;
-         len = 0;
-         while( ( *s != '\0') && ( *s != '&' ) && (*s != '\n') )
+         is.ignore(1,'&');
+         is >> colour;
+         if ( ! is.fail() )
          {
-            s++;
-            len++;
-         }
+            DBG("update colour %s\n", colour.name.c_str() );
 
-         std::string name( start, len );
+            video->UpdateColour( colour );
 
-         ColourDefinition * col = video->GetColour( name );
-         if ( col != 0 )
-         {
-            std::stringstream os;
-            os << *col;
-
-            snprintf(response, respLength-1, "colour=%s", os.str().c_str());
+            strncpy(response,"colour OK", respLength - 1 );
             response[respLength-1] = '\0';
             ret = COMMAND_ERR_OK;
          }
          else
          {
-            strncpy(response,"colour UNKNOWN", respLength - 1 );
+            strncpy(response,"colour BAD", respLength - 1 );
             response[respLength-1] = '\0';
             ret = COMMAND_ERR_PARAMETER;
          }
       }
+      return ret;
    }
-   return ret;
-}
 
    int
-VideoStream::CommandAddColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
-{
-   int ret = COMMAND_ERR_COMMAND;
-   char const * s;
-   char const * start;
-   size_t len;
-
-   std::string name;
-
-   response[0] = '\0';
-
-   if ( ( s = strstr(command, "command=addcolour") ) != NULL )
-   {
-      s = s + strlen("command=addcolour");
-
-      if ( ( s = strstr(s,"name=") ) != NULL ) 
+      VideoStream::CommandQueryColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
       {
-         s = s + strlen("name=");
-         start = s;
-         len = 0;
-         while( ( *s != '\0') && ( *s != '&' ) && (*s != '\n') )
+         int ret = COMMAND_ERR_COMMAND;
+         char const * s;
+         char const * start;
+         size_t len;
+
+         std::string name;
+
+         response[0] = '\0';
+
+         if ( ( s = strstr(command, "command=querycolour") ) != NULL )
          {
-            s++;
-            len++;
-         }
+            s = s + strlen("command=querycolour");
 
-         std::string name( start, len );
-
-         ColourDefinition * col = video->GetColour(name);
-         if ( col == 0 )
-         {
-            ColourDefinition newColour( name );
-
-            while( video->nextColours != 0 ) 
+            if ( ( s = strstr(s,"colour=") ) != NULL ) 
             {
-            };
-
-            std::vector<ColourDefinition> tmp = video->colours;
-
-            tmp.push_back( newColour );
-
-            video->nextColours = & tmp;
-
-            while( video->nextColours != 0 ) 
-            {
-            };
-
-            snprintf( response, respLength-1, "colour added %s", name.c_str() );
-            response[respLength-1] = '\0';
-            ret = COMMAND_ERR_OK;
-         }
-         else
-         {
-            strncpy(response,"colour already defined", respLength - 1 );
-            response[respLength-1] = '\0';
-            ret = COMMAND_ERR_PARAMETER;
-         }
-      }
-   }
-   return ret;
-}
-
-   int
-VideoStream::CommandDeleteColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
-{
-   int ret = COMMAND_ERR_COMMAND;
-   char const * s;
-   char const * start;
-   size_t len;
-
-   std::string name;
-
-   response[0] = '\0';
-
-   if ( ( s = strstr(command, "command=deletecolour") ) != NULL )
-   {
-      s = s + strlen("command=deletecolour");
-
-      if ( ( s = strstr(s,"name=") ) != NULL ) 
-      {
-         s = s + strlen("name=");
-         start = s;
-         len = 0;
-         while( ( *s != '\0') && ( *s != '&' ) && (*s != '\n') )
-         {
-            s++;
-            len++;
-         }
-
-         std::string name( start, len );
-
-         ColourDefinition * col = video->GetColour( name );
-         if ( col != 0 )
-         {
-            std::vector<ColourDefinition> tmp = video->colours;
-
-            for( vector<ColourDefinition>::iterator i = tmp.begin();
-                  i != tmp.end();
-                  ++i)
-            {
-               if ( (*i).name == name )
+               s = s + strlen("colour=");
+               start = s;
+               len = 0;
+               while( ( *s != '\0') && ( *s != '&' ) && (*s != '\n') )
                {
-                  tmp.erase(i);
-                  break;
+                  s++;
+                  len++;
+               }
+
+               std::string name( start, len );
+
+               ColourDefinition * col = video->GetColour( name );
+               if ( col != 0 )
+               {
+                  std::stringstream os;
+                  os << *col;
+
+                  snprintf(response, respLength-1, "colour=%s", os.str().c_str());
+                  response[respLength-1] = '\0';
+                  ret = COMMAND_ERR_OK;
+               }
+               else
+               {
+                  strncpy(response,"colour UNKNOWN", respLength - 1 );
+                  response[respLength-1] = '\0';
+                  ret = COMMAND_ERR_PARAMETER;
                }
             }
+         }
+         return ret;
+      }
 
+   int
+      VideoStream::CommandAddColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
+      {
+         int ret = COMMAND_ERR_COMMAND;
+         char const * s;
+         char const * start;
+         size_t len;
 
-            while( video->nextColours != 0  ) 
+         std::string name;
+
+         response[0] = '\0';
+
+         if ( ( s = strstr(command, "command=addcolour") ) != NULL )
+         {
+            s = s + strlen("command=addcolour");
+
+            if ( ( s = strstr(s,"name=") ) != NULL ) 
             {
-            };
+               s = s + strlen("name=");
+               start = s;
+               len = 0;
+               while( ( *s != '\0') && ( *s != '&' ) && (*s != '\n') )
+               {
+                  s++;
+                  len++;
+               }
 
-            video->nextColours = & tmp;
+               std::string name( start, len );
 
-            while( video->nextColours != 0  ) 
+               ColourDefinition * col = video->GetColour(name);
+               if ( col == 0 )
+               {
+                  ColourDefinition newColour( name );
+
+                  while( video->nextColours != 0 ) 
+                  {
+                  };
+
+                  std::vector<ColourDefinition> tmp = video->colours;
+
+                  tmp.push_back( newColour );
+
+                  video->nextColours = & tmp;
+
+                  while( video->nextColours != 0 ) 
+                  {
+                  };
+
+                  snprintf( response, respLength-1, "colour added %s", name.c_str() );
+                  response[respLength-1] = '\0';
+                  ret = COMMAND_ERR_OK;
+               }
+               else
+               {
+                  strncpy(response,"colour already defined", respLength - 1 );
+                  response[respLength-1] = '\0';
+                  ret = COMMAND_ERR_PARAMETER;
+               }
+            }
+         }
+         return ret;
+      }
+
+   int
+      VideoStream::CommandDeleteColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
+      {
+         int ret = COMMAND_ERR_COMMAND;
+         char const * s;
+         char const * start;
+         size_t len;
+
+         std::string name;
+
+         response[0] = '\0';
+
+         if ( ( s = strstr(command, "command=deletecolour") ) != NULL )
+         {
+            s = s + strlen("command=deletecolour");
+
+            if ( ( s = strstr(s,"name=") ) != NULL ) 
             {
-            };
+               s = s + strlen("name=");
+               start = s;
+               len = 0;
+               while( ( *s != '\0') && ( *s != '&' ) && (*s != '\n') )
+               {
+                  s++;
+                  len++;
+               }
 
-            snprintf( response, respLength-1, "colour added %s", name.c_str() );
+               std::string name( start, len );
+
+               ColourDefinition * col = video->GetColour( name );
+               if ( col != 0 )
+               {
+                  std::vector<ColourDefinition> tmp = video->colours;
+
+                  for( vector<ColourDefinition>::iterator i = tmp.begin();
+                        i != tmp.end();
+                        ++i)
+                  {
+                     if ( (*i).name == name )
+                     {
+                        tmp.erase(i);
+                        break;
+                     }
+                  }
+
+
+                  while( video->nextColours != 0  ) 
+                  {
+                  };
+
+                  video->nextColours = & tmp;
+
+                  while( video->nextColours != 0  ) 
+                  {
+                  };
+
+                  snprintf( response, respLength-1, "colour added %s", name.c_str() );
+                  response[respLength-1] = '\0';
+                  ret = COMMAND_ERR_OK;
+               }
+               else
+               {
+                  strncpy(response,"colour UNKNOWN", respLength - 1 );
+                  response[respLength-1] = '\0';
+                  ret = COMMAND_ERR_PARAMETER;
+               }
+            }
+         }
+         return ret;
+      }
+
+   int
+      VideoStream::CommandSelectColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
+      {
+         int ret = COMMAND_ERR_COMMAND;
+         char const * s;
+         char const * start;
+         size_t len;
+
+         std::string name;
+
+         response[0] = '\0';
+
+         if ( ( s = strstr(command, "command=selectcolour") ) != NULL )
+         {
+            s = s + strlen("command=selectcolour");
+
+            if ( ( s = strstr(s,"name=") ) != NULL ) 
+            {
+               s = s + strlen("name=");
+               start = s;
+               len = 0;
+               while( ( *s != '\0') && ( *s != '&' ) && (*s != '\n') )
+               {
+                  s++;
+                  len++;
+               }
+
+               std::string name( start, len );
+
+               ColourDefinition * col = video->GetColour( name );
+               if ( col != 0 )
+               {
+                  video->selectedColour = col->name;
+
+                  snprintf( response, respLength-1, "colour selected %s", col->name.c_str() );
+                  response[respLength-1] = '\0';
+                  ret = COMMAND_ERR_OK;
+               }
+               else
+               {
+                  strncpy(response,"colour UNKNOWN", respLength - 1 );
+                  response[respLength-1] = '\0';
+                  ret = COMMAND_ERR_PARAMETER;
+               }
+            }
+         }
+         return ret;
+      }
+
+   int
+      VideoStream::CommandQueryColourList( VideoStream * video, char const * command, char * response, unsigned int respLength )
+      {
+         int ret = COMMAND_ERR_COMMAND;
+         char const * s;
+         //  char const * start;
+         //size_t len;
+
+         std::string name;
+
+         response[0] = '\0';
+
+         if ( ( s = strstr(command, "command=querycolourlist") ) != NULL )
+         {
+            s = s + strlen("command=querycolourlist");
+            std::string list = video->GetColourList();
+
+            snprintf(response,respLength-1, "colourlist={%s}", list.c_str() );
             response[respLength-1] = '\0';
             ret = COMMAND_ERR_OK;
          }
          else
          {
-            strncpy(response,"colour UNKNOWN", respLength - 1 );
+            strncpy(response,"colourlist UNKNOWN", respLength - 1 );
             response[respLength-1] = '\0';
             ret = COMMAND_ERR_PARAMETER;
          }
+         return ret;
       }
-   }
-   return ret;
-}
 
-   int
-VideoStream::CommandSelectColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
-{
-   int ret = COMMAND_ERR_COMMAND;
-   char const * s;
-   char const * start;
-   size_t len;
+   // Must match the enum VideoControl
 
-   std::string name;
-
-   response[0] = '\0';
-
-   if ( ( s = strstr(command, "command=selectcolour") ) != NULL )
+   char const * VideoControlStrings[] = 
    {
-      s = s + strlen("command=selectcolour");
+      "illegal control",
+      "brightness",
+      "hue",
+      "saturation",
+      "contrast",
+      "sharpness",
+      "gain"
+   };
 
-      if ( ( s = strstr(s,"name=") ) != NULL ) 
+
+   /* Assume all legal values are positive. -1 specifices the default value */
+   int
+      VideoStream::CommandVideoControl( VideoStream * video, char const * command, char * response, unsigned int respLength )
       {
-         s = s + strlen("name=");
-         start = s;
-         len = 0;
-         while( ( *s != '\0') && ( *s != '&' ) && (*s != '\n') )
+         int ret = COMMAND_ERR_COMMAND;
+         char const * s;
+         enum VideoControl vcontrol = IllegalControl;
+         int val = -2;
+         char const * control;
+
+         response[0] = '\0';
+
+         if ( ( s = strstr(command, "command=videocontrol") ) != NULL )
          {
-            s++;
-            len++;
-         }
-
-         std::string name( start, len );
-
-         ColourDefinition * col = video->GetColour( name );
-         if ( col != 0 )
-         {
-            video->selectedColour = col->name;
-
-            snprintf( response, respLength-1, "colour selected %s", col->name.c_str() );
-            response[respLength-1] = '\0';
-            ret = COMMAND_ERR_OK;
-         }
-         else
-         {
-            strncpy(response,"colour UNKNOWN", respLength - 1 );
-            response[respLength-1] = '\0';
-            ret = COMMAND_ERR_PARAMETER;
-         }
-      }
-   }
-   return ret;
-}
-
-   int
-VideoStream::CommandQueryColourList( VideoStream * video, char const * command, char * response, unsigned int respLength )
-{
-   int ret = COMMAND_ERR_COMMAND;
-   char const * s;
-   //  char const * start;
-   //size_t len;
-
-   std::string name;
-
-   response[0] = '\0';
-
-   if ( ( s = strstr(command, "command=querycolourlist") ) != NULL )
-   {
-      s = s + strlen("command=querycolourlist");
-      std::string list = video->GetColourList();
-
-      snprintf(response,respLength-1, "colourlist={%s}", list.c_str() );
-      response[respLength-1] = '\0';
-      ret = COMMAND_ERR_OK;
-   }
-   else
-   {
-      strncpy(response,"colourlist UNKNOWN", respLength - 1 );
-      response[respLength-1] = '\0';
-      ret = COMMAND_ERR_PARAMETER;
-   }
-   return ret;
-}
-
-// Must match the enum VideoControl
-
-char const * VideoControlStrings[] = 
-{
-   "illegal control",
-   "brightness",
-   "hue",
-   "saturation",
-   "contrast",
-   "sharpness",
-   "gain"
-};
-
-
-/* Assume all legal values are positive. -1 specifices the default value */
-   int
-VideoStream::CommandVideoControl( VideoStream * video, char const * command, char * response, unsigned int respLength )
-{
-   int ret = COMMAND_ERR_COMMAND;
-   char const * s;
-   enum VideoControl vcontrol = IllegalControl;
-   int val = -2;
-   char const * control;
-
-   response[0] = '\0';
-
-   if ( ( s = strstr(command, "command=videocontrol") ) != NULL )
-   {
-      if ( ( s = strstr(s, "control=") ) != NULL ) 
-      {
-         s = s + strlen("control=");
-         control = 0;
-         for(unsigned int i = 0; i < sizeof(VideoControlStrings)/sizeof(VideoControlStrings[0] ); ++i )
-         {
-            if ( ! strncmp(VideoControlStrings[i],s,strlen(VideoControlStrings[i]) ) )
+            if ( ( s = strstr(s, "control=") ) != NULL ) 
             {
-               control = VideoControlStrings[i];
-               vcontrol = static_cast<enum VideoControl>( i );
-               s = s + strlen(control);
+               s = s + strlen("control=");
+               control = 0;
+               for(unsigned int i = 0; i < sizeof(VideoControlStrings)/sizeof(VideoControlStrings[0] ); ++i )
+               {
+                  if ( ! strncmp(VideoControlStrings[i],s,strlen(VideoControlStrings[i]) ) )
+                  {
+                     control = VideoControlStrings[i];
+                     vcontrol = static_cast<enum VideoControl>( i );
+                     s = s + strlen(control);
+                     break;
+                  }
+               }
+
+               if ( control != 0 )
+               {
+                  if ( ( s = strstr(s, "value=") ) != NULL )
+                  {
+                     s = s + strlen("value=");
+                     if ( ! strncmp("query", s, strlen("query" ) ) )
+                     {
+                        val = -2;
+                        ret = COMMAND_ERR_OK;
+                     }
+                     else if ( sscanf(s, "%d", & val ) != 1 )
+                     {
+                        ret = COMMAND_ERR_PARAMETER;
+                        val = -2;
+                     }
+                  }
+
+                  if ( val >= -1 ) 
+                  {
+                     int err;
+                     switch( vcontrol )
+                     {
+                        case Brightness:
+                           err = video->device->SetBrightness( val );
+                           if ( err >= 0 )
+                           {
+                              ret = COMMAND_ERR_OK;
+                           }
+                           break;
+                        case Contrast:
+                           err = video->device->SetContrast( val );
+                           if ( err >= 0 )
+                           {
+                              ret = COMMAND_ERR_OK;
+                           }
+                           break;
+                        case Saturation:
+                           err = video->device->SetSaturation( val );
+                           if ( err >= 0 )
+                           {
+                              ret = COMMAND_ERR_OK;
+                           }
+                           break;
+                        case Sharpness:
+                           err = video->device->SetSharpness( val );
+                           if ( err >= 0 )
+                           {
+                              ret = COMMAND_ERR_OK;
+                           }
+                           break;
+                        case Gain:
+                           err = video->device->SetGain( val );
+                           if ( err >= 0 )
+                           {
+                              ret = COMMAND_ERR_OK;
+                           }
+                           break;
+                        default:
+                           ret = COMMAND_ERR_COMMAND;
+                           break;
+                     }
+                  }
+
+                  if ( ret == COMMAND_ERR_OK )
+                  {
+                     int v;
+
+                     switch( vcontrol )
+                     {
+                        case Brightness:
+                           v = video->device->GetBrightness( );
+                           if ( v < 0 )
+                           {
+                              ret = COMMAND_ERR_COMMAND;
+                           }
+                           break;
+                        case Contrast:
+                           v = video->device->GetContrast( );
+                           if ( v < 0 )
+                           {
+                              ret = COMMAND_ERR_COMMAND;
+                           }
+                           break;
+                        case Saturation:
+                           v = video->device->GetSaturation( );
+                           if ( v < 0 )
+                           {
+                              ret = COMMAND_ERR_COMMAND;
+                           }
+                           break;
+                        case Sharpness:
+                           v = video->device->GetSharpness( );
+                           if ( v < 0 )
+                           {
+                              ret = COMMAND_ERR_COMMAND;
+                           }
+                           break;
+                        case Gain:
+                           v = video->device->GetGain( );
+                           if ( v < 0 )
+                           {
+                              ret = COMMAND_ERR_COMMAND;
+                           }
+                           break;
+                        default:
+                           ret = COMMAND_ERR_COMMAND;
+                           break;
+                     }
+
+                     if ( v >= 0 )
+                     {
+                        snprintf(response, respLength - 1, "control=%s&value=%d", control, v );
+                     }
+                  }
+               }
+            }
+         }
+         return ret;
+      }
+
+   enum VideoStream::ProcessType
+      VideoStream::GetMode( void ) const
+      {
+         return mode;
+      }
+
+   void
+      VideoStream::SetMode( enum ProcessType m )
+      {
+         mode = m;
+      }
+
+   void
+      VideoStream::UpdateColour( ColourDefinition const col )
+      {
+         for( vector<ColourDefinition>::iterator i = colours.begin();
+               i != colours.end();
+               ++i)
+         {
+            if ( (*i).name == col.name )
+            {
+               (*i).min = col.min;
+               (*i).max = col.max;
                break;
             }
          }
-
-         if ( control != 0 )
-         {
-            if ( ( s = strstr(s, "value=") ) != NULL )
-            {
-               s = s + strlen("value=");
-               if ( ! strncmp("query", s, strlen("query" ) ) )
-               {
-                  val = -2;
-                  ret = COMMAND_ERR_OK;
-               }
-               else if ( sscanf(s, "%d", & val ) != 1 )
-               {
-                  ret = COMMAND_ERR_PARAMETER;
-                  val = -2;
-               }
-            }
-
-            if ( val >= -1 ) 
-            {
-               int err;
-               switch( vcontrol )
-               {
-                  case Brightness:
-                     err = video->device->SetBrightness( val );
-                     if ( err >= 0 )
-                     {
-                        ret = COMMAND_ERR_OK;
-                     }
-                     break;
-                  case Contrast:
-                     err = video->device->SetContrast( val );
-                     if ( err >= 0 )
-                     {
-                        ret = COMMAND_ERR_OK;
-                     }
-                     break;
-                  case Saturation:
-                     err = video->device->SetSaturation( val );
-                     if ( err >= 0 )
-                     {
-                        ret = COMMAND_ERR_OK;
-                     }
-                     break;
-                  case Sharpness:
-                     err = video->device->SetSharpness( val );
-                     if ( err >= 0 )
-                     {
-                        ret = COMMAND_ERR_OK;
-                     }
-                     break;
-                  case Gain:
-                     err = video->device->SetGain( val );
-                     if ( err >= 0 )
-                     {
-                        ret = COMMAND_ERR_OK;
-                     }
-                     break;
-                  default:
-                     ret = COMMAND_ERR_COMMAND;
-                     break;
-               }
-            }
-
-            if ( ret == COMMAND_ERR_OK )
-            {
-               int v;
-
-               switch( vcontrol )
-               {
-                  case Brightness:
-                     v = video->device->GetBrightness( );
-                     if ( v < 0 )
-                     {
-                        ret = COMMAND_ERR_COMMAND;
-                     }
-                     break;
-                  case Contrast:
-                     v = video->device->GetContrast( );
-                     if ( v < 0 )
-                     {
-                        ret = COMMAND_ERR_COMMAND;
-                     }
-                     break;
-                  case Saturation:
-                     v = video->device->GetSaturation( );
-                     if ( v < 0 )
-                     {
-                        ret = COMMAND_ERR_COMMAND;
-                     }
-                     break;
-                  case Sharpness:
-                     v = video->device->GetSharpness( );
-                     if ( v < 0 )
-                     {
-                        ret = COMMAND_ERR_COMMAND;
-                     }
-                     break;
-                  case Gain:
-                     v = video->device->GetGain( );
-                     if ( v < 0 )
-                     {
-                        ret = COMMAND_ERR_COMMAND;
-                     }
-                     break;
-                  default:
-                     ret = COMMAND_ERR_COMMAND;
-                     break;
-               }
-
-               if ( v >= 0 )
-               {
-                  snprintf(response, respLength - 1, "control=%s&value=%d", control, v );
-               }
-            }
-         }
       }
-   }
-   return ret;
-}
-
-enum VideoStream::ProcessType
-VideoStream::GetMode( void ) const
-{
-   return mode;
-}
-
-   void
-VideoStream::SetMode( enum ProcessType m )
-{
-   mode = m;
-}
-
-   void
-VideoStream::UpdateColour( ColourDefinition const col )
-{
-   for( vector<ColourDefinition>::iterator i = colours.begin();
-         i != colours.end();
-         ++i)
-   {
-      if ( (*i).name == col.name )
-      {
-         (*i).min = col.min;
-         (*i).max = col.max;
-         break;
-      }
-   }
-}
 
    ColourDefinition *
-VideoStream::GetColour( std::string const & name ) 
-{
-   ColourDefinition * col = 0;
-   for( vector<ColourDefinition>::iterator i = colours.begin();
-         i != colours.end();
-         ++i)
-   {
-      if ( (*i).name == name )
+      VideoStream::GetColour( std::string const & name ) 
       {
-         return & (*i);
+         ColourDefinition * col = 0;
+         for( vector<ColourDefinition>::iterator i = colours.begin();
+               i != colours.end();
+               ++i)
+         {
+            if ( (*i).name == name )
+            {
+               return & (*i);
+            }
+         }
+         return col;
       }
-   }
-   return col;
-}
 
    std::string
-VideoStream::GetColourList( void )
-{
-   std::string list;
-
-   for( vector<ColourDefinition>::iterator i = colours.begin();
-         i != colours.end();
-         ++i)
-   {
-      if ( i != colours.begin() )
+      VideoStream::GetColourList( void )
       {
-         list = list + "&";
+         std::string list;
+
+         for( vector<ColourDefinition>::iterator i = colours.begin();
+               i != colours.end();
+               ++i)
+         {
+            if ( i != colours.begin() )
+            {
+               list = list + "&";
+            }
+            list = list + (*i).name;
+         }
+         return list;
       }
-      list = list + (*i).name;
-   }
-   return list;
-}
 
    void
-VideoStream::SetColours( std::vector<ColourDefinition> colours )
-{
-   this->colours = colours;
-}
+      VideoStream::SetColours( std::vector<ColourDefinition> colours )
+      {
+         this->colours = colours;
+      }
 
    std::string
-VideoStream::ReadRunningConfiguration( void ) 
-{
-   Globals * glob = Globals::GetGlobals();
+      VideoStream::ReadRunningConfiguration( void ) 
+      {
+         Globals * glob = Globals::GetGlobals();
 
-   Configuration config;
+         Configuration config;
 
-   // General options
-   config.subsample = GetSubsample();
+         // General options
+         config.subsample = GetSubsample();
 
-   // Camera options
-   config.device_video = device->GetDeviceName();
+         // Camera options
+         config.device_video = device->GetDeviceName();
 
-   if ( device != 0 )
-   {
-      config.width = device->GetWidth();
-      config.height = device->GetHeight();
-      config.depth = device->GetDepth();
-      config.brightness = device->GetBrightness();
-      config.contrast = device->GetContrast();
-      config.saturation = device->GetSaturation();
-      config.sharpness = device->GetSharpness();
-      config.gain = device->GetGain();
-   }
+         if ( device != 0 )
+         {
+            config.width = device->GetWidth();
+            config.height = device->GetHeight();
+            config.depth = device->GetDepth();
+            config.brightness = device->GetBrightness();
+            config.contrast = device->GetContrast();
+            config.saturation = device->GetSaturation();
+            config.sharpness = device->GetSharpness();
+            config.gain = device->GetGain();
+         }
 
-   // HTTP options
-   config.http_port = glob->GetHTTPDServer()->GetHTTPPort(); 
-   config.http_addr = glob->GetHTTPDServer()->GetHTTPAddr();
-   config.docroot = glob->GetHTTPDServer()->GetDocRoot();
-   config.index = glob->GetHTTPDServer()->GetIndex();
+         // HTTP options
+         config.http_port = glob->GetHTTPDServer()->GetHTTPPort(); 
+         config.http_addr = glob->GetHTTPDServer()->GetHTTPAddr();
+         config.docroot = glob->GetHTTPDServer()->GetDocRoot();
+         config.index = glob->GetHTTPDServer()->GetIndex();
 
-   // Colour options
-   config.colours.clear();
+         // Colour options
+         config.colours.clear();
 
-   for( vector<ColourDefinition>::iterator i = this->colours.begin();
-         i != this->colours.end();
-         ++i)
-   {
-      config.colours.push_back( (*i).ToString() );
-   }
-   // Serial options
-   if ( glob->GetSerial() != 0 )
-   {
-      config.device_serial = glob->GetSerial()->GetDeviceName();
-      config.baudrate = Serial::ConvertBaudrateToString( glob->GetSerial()->GetBaudrate() );
-   }
+         for( vector<ColourDefinition>::iterator i = this->colours.begin();
+               i != this->colours.end();
+               ++i)
+         {
+            config.colours.push_back( (*i).ToString() );
+         }
+         // Serial options
+         if ( glob->GetSerial() != 0 )
+         {
+            config.device_serial = glob->GetSerial()->GetDeviceName();
+            config.baudrate = Serial::ConvertBaudrateToString( glob->GetSerial()->GetBaudrate() );
+         }
 
-   std::stringstream os;
-   os << config;
-   return os.str();
-}
+         std::stringstream os;
+         os << config;
+         return os.str();
+      }
 
-unsigned int
-VideoStream::GetSubsample( void ) const 
-{
-   return subsample;
-}
+   unsigned int
+      VideoStream::GetSubsample( void ) const 
+      {
+         return subsample;
+      }
 
    void
-VideoStream::SetSubsample( unsigned int subsample )
-{
-   this->subsample = subsample;
-}
+      VideoStream::SetSubsample( unsigned int subsample )
+      {
+         this->subsample = subsample;
+      }
 
    int
-VideoStream::CommandShutdown( VideoStream * video, char const * command, char * response, unsigned int respLength )
-{
-   int ret = COMMAND_ERR_COMMAND;
-   char const * s;
-   response[0] = '\0';
-
-   if ( ( s = strstr(command, "command=shutdown") ) != NULL )
-   {
-      ret = COMMAND_ERR_OK;
-      system( "sudo shutdown -h now" );
-   }
-   return ret;
-}
-
-std::string
-VideoStream::ConvertResultsToString( void ) const
-{
-   std::ostringstream o;
-
-#ifndef NDEBUG
-   // std::cout << "VideoStream::ConvertResultsToString called" << std::endl;
-#endif
-
-   o << "Ok &";
-   for( std::vector<VisionObject>::const_iterator i = results.begin();
-         i != results.end();
-         ++i)
-   {
-#ifndef NDEBUG
-      std::cout << "Adding object " << (*i).type << std::endl;
-#endif
-      if ( i != results.begin() )
+      VideoStream::CommandShutdown( VideoStream * video, char const * command, char * response, unsigned int respLength )
       {
-         o << "&";
-      }
-      o << *i;
-      /*
-         if ( (*i).size > max )
+         int ret = COMMAND_ERR_COMMAND;
+         char const * s;
+         response[0] = '\0';
+
+         if ( ( s = strstr(command, "command=shutdown") ) != NULL )
          {
-         x = (*i).x;
-         y = (*i).y;
-         max = (*i).size;
+            ret = COMMAND_ERR_OK;
+            system( "sudo shutdown -h now" );
          }
-       */
-   }
-   std::string str = o.str();
+         return ret;
+      }
+
+   std::string
+      VideoStream::ConvertResultsToString( void ) const
+      {
+         std::ostringstream o;
 
 #ifndef NDEBUG
-   //  std::cout << "VideoStream::ConvertResultsToString exits with result " << str << std::endl;
+         // std::cout << "VideoStream::ConvertResultsToString called" << std::endl;
 #endif
-   // Hack to get the positon I want quicker
 
-   //  std::ostringstream o2;
+         o << "Ok &";
+         for( std::vector<VisionObject>::const_iterator i = results.begin();
+               i != results.end();
+               ++i)
+         {
+#ifndef NDEBUG
+            std::cout << "Adding object " << (*i).type << std::endl;
+#endif
+            if ( i != results.begin() )
+            {
+               o << "&";
+            }
+            o << *i;
+            /*
+               if ( (*i).size > max )
+               {
+               x = (*i).x;
+               y = (*i).y;
+               max = (*i).size;
+               }
+               */
+         }
+         std::string str = o.str();
 
-   //o2 << max << " " << x << " " << y << std::endl;
-   return str;
-}
+#ifndef NDEBUG
+         //  std::cout << "VideoStream::ConvertResultsToString exits with result " << str << std::endl;
+#endif
+         // Hack to get the positon I want quicker
+
+         //  std::ostringstream o2;
+
+         //o2 << max << " " << x << " " << y << std::endl;
+         return str;
+      }

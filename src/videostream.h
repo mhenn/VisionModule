@@ -37,8 +37,10 @@ class VideoStream
          Blur,
          Sharp,
          Sobel,
-         Huff,
+         Hough,
          Canny,
+         Histogram,
+         Integral,
          LocalThreshold
       };
 
