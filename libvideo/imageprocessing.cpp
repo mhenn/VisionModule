@@ -459,7 +459,7 @@ ImageProcessing::convolution(FrameBuffer * frame,
                int curry = y+row;
                if (currx >= 0 && curry >= 0 && currx < frame->width && curry < frame->height ){
                   RawPixel p;
-                  frame->getPixel(row+y, col+x ,&p);
+                  frame->getPixel(curry, currx ,&p);
                   sumP += p * pKernel[(x+1) * 3 + (y + 1)];
                }
             }
@@ -508,8 +508,8 @@ ImageProcessing::sobel(FrameBuffer * frame,
                int curry = y+row;
                if (currx >= 0 && curry >= 0 && currx < frame->width && curry < frame->height ){
                   RawPixel h,v;
-                  frame->getPixel(row+y, col+x ,&v);
-                  frame->getPixel(row+y, col+x ,&h);
+                  frame->getPixel(curry, currx ,&v);
+                  frame->getPixel(curry, currx ,&h);
                   sumH += h * kernel_sobel_h[(x+1) * 3+ (y+1)];
                   sumV += v * kernel_sobel_v[(x+1) * 3+ (y+1)];
                }
