@@ -93,22 +93,24 @@ class VideoStream
       pthread_mutex_t         controls_mutex;
 
    private:
-      void ProcessShowColours(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+      void ProcessShowColours(FrameBuffer* frame, FrameBuffer* outFrame,uint8_t subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);
-      void ProcessBlur(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);
-      void ProcessSharp(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);
-      void ProcessSobel (FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample); 
-      void ProcessHuff(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample); 
-      void ProcessLocalThreshold(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);
-      void ProcessSegmentColours(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+      void ProcessBlur(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);
+      void ProcessSharp(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);
+      void ProcessSobel (FrameBuffer* frame, FrameBuffer* outFrame, uint8_t subSample); 
+      void ProcessHuff(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample); 
+      void ProcessLocalThreshold(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);
+      void ProcessSegmentColours(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);
-      void ProcessCanny(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);  
-      void ProcessThreshold(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample);  
-      void ProcessScanLines(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+      void ProcessCanny(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);  
+      void ProcessThreshold(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);  
+      void ProcessScanLines(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);  
-      void ProcessSegmentation(FrameBuffer* frame, FrameBuffer* outFrame,unsigned int subSample,
+      void ProcessSegmentation(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);  
 
+      void ProcessHistogram(FrameBuffer* frame, FrameBuffer*outFrame, uint8_t subSample);  
+      void ProcessIntegral( FrameBuffer* frame, FrameBuffer* outFrame,uint8_t subSample);  
 
    public:
       void ProcessFrame( enum ProcessType ptype, 
@@ -129,7 +131,7 @@ class VideoStream
       static int CommandDeleteColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
       static int CommandSelectColour( VideoStream * video, char const * command, char * response, unsigned int respLength );
       static int CommandShutdown( VideoStream * video, char const * command, char * response, unsigned int respLength );
- 
+
       std::vector<VisionObject> results;
       std::string resultString;
 

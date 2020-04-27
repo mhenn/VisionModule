@@ -399,7 +399,6 @@ ImageProcessing::toGreyScale(FrameBuffer * frame,
       for( unsigned int col = subSample; col < frame->width; col = col + subSample)
       {
 
-         RawPixel grey = RawPixel(0,0,0);
          frame->getPixel(row,col,&pPixel);
          int g =  ((0.3 * pPixel.red)+(0.59 * pPixel.green)+(0.11 * pPixel.blue));
          frame->setPixel(row,col, RawPixel(g,g,g));
@@ -436,6 +435,74 @@ ImageProcessing::localThreshold(FrameBuffer* frame, FrameBuffer* outFrame, int s
    }
 }
 
+void ImageProcessing::integral(FrameBuffer* frame,FrameBuffer* outFrame){
+
+
+    IntegralImage * im = new IntegralImage( frame->width, frame->height );
+    ImageProcessing::calcIntegralImage( frame, im );
+    im->toFrame(outFrame);
+   
+}
+
+
+
+#include <vector>
+void ImageProcessing::histogram(FrameBuffer* frame,FrameBuffer* outFrame){
+  
+   struct RGBP{
+      uint32_t red;
+      uint32_t green;
+      uint32_t blue;
+      RGBP(uint32_t r, uint32_t g, uint32_t b){
+         red =r;
+         green = g;
+         blue = b;
+      }
+   };
+
+     std::vector<RGBP> hist = std::vector<RGBP>();
+   RawPixel p;
+
+   for (int i =0; i < 256; i++){
+      hist.push_back(RGBP(0,0,0));
+   }
+
+   for(int x = 0; x < frame->width; x++)
+      for(int y = 0; y < frame->height; y++){
+
+         frame->getPixel(y,x,&p);
+         hist[p.red].red +=1;
+         hist[p.blue].blue +=1;
+         hist[p.green].green +=1;
+      }
+
+   RawPixel red = RawPixel(255,0,0);
+   RawPixel green = RawPixel(0,255,0);
+   RawPixel blue = RawPixel(0,0,255);
+   int fh = frame->height;
+   auto getx= [](int i,uint8_t pos){return (i *3) + pos;};
+   auto gety= [](int amount, int height){ return (height -1) - (amount );};
+
+   for(int i =0; i < hist.size(); i++){
+      RGBP vals = hist[i];
+      uint32_t xr = getx(i,0), xg = getx(i,1), xb = getx(i,2);
+      uint32_t yr = gety(vals.red,fh), yg = gety(vals.green,fh), yb = gety(vals.blue,fh);
+
+      outFrame->setPixel(yr,xr,red); 
+      outFrame->setPixel(yg,xg,green); 
+      outFrame->setPixel(yb,xb,blue); 
+
+      drawBresenhamLine(outFrame, xr, fh, xr,yr,red);
+      drawBresenhamLine(outFrame, xg, fh, xg,yg,green);
+      drawBresenhamLine(outFrame, xb, fh, xb,yb,blue);
+    
+      if (i>0){
+         drawBresenhamLine(outFrame,getx(i-1,0),gety(hist[i-1].red,fh),xr,yr,red);
+         drawBresenhamLine(outFrame,getx(i-1,1),gety(hist[i-1].green,fh),xg,yg,green);
+         drawBresenhamLine(outFrame,getx(i-1,2),gety(hist[i-1].blue,fh),xb,yb,blue);
+      }
+   }
+}  
 
 
 void 

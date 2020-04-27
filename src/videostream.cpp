@@ -9,7 +9,6 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
-
 #include <string>
 
 #if defined(ENABLE_DC1394)
@@ -195,7 +194,7 @@ VideoStream::run( )
 VideoStream::ProcessSegmentColours(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subsample, 
+      uint8_t subsample, 
       std::vector<ColourDefinition> colours,
       RawPixel mark)
 {
@@ -238,7 +237,7 @@ VideoStream::ProcessSegmentColours(
 VideoStream::ProcessShowColours(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subsample, 
+      uint8_t subsample, 
       std::vector<ColourDefinition> colours,
       RawPixel mark)
 {
@@ -258,17 +257,30 @@ VideoStream::ProcessShowColours(
 void VideoStream::ProcessScanLines(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subSample, 
+      uint8_t subSample, 
       std::vector<ColourDefinition> colours,
       RawPixel mark)
 {
-   DBG("Scanlines");
    //      ImageProcessing::segmentScanLines( frame, outFrame, threshold, minimumLineLength, maximumLineLength, minimumSize, mark, subsample, 0 );
-} 
+}
+
+void VideoStream::ProcessIntegral(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t subSample){
+
+   ImageProcessing::integral(frame,outFrame);
+
+}
+void VideoStream::ProcessHistogram(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t subSample){
+
+   ImageProcessing::histogram(frame,outFrame);
+
+}
+
+
+
 void VideoStream::ProcessBlur(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subSample)
+      uint8_t subSample)
 {
 
    double kernel_blur[9] =
@@ -276,16 +288,7 @@ void VideoStream::ProcessBlur(
       0.0625,   0.125,  0.0625,
       0.125, 0.25,   0.125,
       0.0625,   0.125, 0.0625,
-   };/*
-        double kernel_blur[25] =
-        {
-        0.003663004,0.014652015 , 0.025641026, 0.014652015, 0.003663004,
-        0.014652015,0.058608059,0.095238095,0.058608059,0.014652015,
-        0.025641026,0.095238095,0.15018315,0.095238095,0.025641026,
-        0.014652015,0.058608059,0.095238095,0.058608059,0.014652015,
-        0.003663004,0.014652015,0.025641026,0.014652015,0.003663004,
-        };*/
-
+   };
 
    ImageProcessing::toGreyScale(frame,subSample);
    FrameBuffer* tmp = new FrameBufferRGB24BE();
@@ -297,7 +300,7 @@ void VideoStream::ProcessBlur(
 void VideoStream::ProcessSharp(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subSample)
+      uint8_t subSample)
 {
    double kernel_sharpen[9] =
    {
@@ -312,7 +315,7 @@ void VideoStream::ProcessSharp(
 void VideoStream::ProcessSobel(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subSample)
+      uint8_t subSample)
 {
 
 
@@ -341,7 +344,7 @@ void VideoStream::ProcessSobel(
 void VideoStream::ProcessThreshold(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subSample)
+      uint8_t subSample)
 {
    ImageProcessing::binarization(frame,outFrame,subSample,10,110);
 }
@@ -349,20 +352,20 @@ void VideoStream::ProcessThreshold(
 void VideoStream::ProcessHuff(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subsample){}
+      uint8_t subsample){}
 void VideoStream::ProcessCanny(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subsample){}
+      uint8_t subsample){}
 void VideoStream::ProcessLocalThreshold(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subsample){}
+      uint8_t subsample){}
 
 void VideoStream::ProcessSegmentation(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
-      unsigned int subsample, 
+      uint8_t subsample, 
       std::vector<ColourDefinition> colours,
       RawPixel mark)
 {}
@@ -377,7 +380,6 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
 {
 
    outFrame->fill( RawPixel( 0, 0, 0 ) );
-
    if ( (  ptype == Raw ) || ( ptype == ShowColours ) )
       ImageProcessing::convertBuffer( frame, outFrame, subsample );
 
@@ -401,6 +403,13 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
    if (ptype == LocalThreshold)
       ImageProcessing::localThreshold(frame, outFrame, subSample);  
 
+   if (ptype == Histogram)
+      ProcessHistogram(frame, outFrame, subSample);  
+
+   if (ptype == Integral)
+      ProcessIntegral(frame, outFrame, subSample);  
+
+
    if ( ptype == SegmentColours )
       ProcessSegmentColours(frame, outFrame, subSample, colours, mark);
 
@@ -413,7 +422,6 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
 
    if ( ptype == Segmentation )
       ProcessSegmentation(frame, outFrame, subSample, colours, mark);  
-
 
 }
 
@@ -479,7 +487,6 @@ VideoStream::sendImage(FrameBuffer * img)
     return NULL;
     }
     */
-#include <string.h>
 // Make sure that these match the ProcessType enum above.
 static std::string processTypeStrings[] = 
 {
@@ -494,16 +501,16 @@ static std::string processTypeStrings[] =
    "sobel",
    "hough",
    "canny",
-   "historgram",
+   "histogram",
    "integral",
    "local_threshold"
 };
 
 
 
-   int
-VideoStream::CommandProcessingMode( VideoStream * video, char const * command, char * response, unsigned int respLength )
-{
+int
+VideoStream::CommandProcessingMode( VideoStream * video, char const * command, char * response, unsigned int respLength ){
+
    int ret = COMMAND_ERR_COMMAND;
    char const * s;
    //  enum ProcessType processMode;
@@ -559,6 +566,7 @@ VideoStream::CommandProcessingMode( VideoStream * video, char const * command, c
       }
       return ret;
    }
+}
 
    int VideoStream::CommandUpdateColour( VideoStream * video, char const * command, char * response, unsigned int respLength )
    {

@@ -60,6 +60,9 @@ static void localThreshold(FrameBuffer* frame, FrameBuffer* outFrame, int subSam
 static void scanLines(FrameBuffer* frame, FrameBuffer* outFrame, unsigned int subSample);
 static void sobel(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample);
 static void toGreyScale(FrameBuffer* frame, unsigned int subSample);
+static void integral(FrameBuffer* frame,FrameBuffer* outFrame);  
+static void histogram(FrameBuffer* frame,FrameBuffer* outFrame);  
+
 };
 
 
