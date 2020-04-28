@@ -389,19 +389,17 @@ ImageProcessing::binarization(FrameBuffer * frame,
    convertBuffer(frame,outFrame,subSample);
 }
 
-void 
-ImageProcessing::toGreyScale(FrameBuffer * frame,
-      unsigned int subSample){
+void ImageProcessing::toGreyScale(FrameBuffer * frame){
    RawPixel pPixel;
 
-   for( unsigned int row = 0; row < frame->height; row = row + subSample )
+   for( uint32_t x= 0; x < frame->width; x++ )
    {
-      for( unsigned int col = subSample; col < frame->width; col = col + subSample)
+      for( uint32_t y = 0; y < frame->height; y++)
       {
 
-         frame->getPixel(row,col,&pPixel);
+         frame->getPixel(y,x,&pPixel);
          int g =  ((0.3 * pPixel.red)+(0.59 * pPixel.green)+(0.11 * pPixel.blue));
-         frame->setPixel(row,col, RawPixel(g,g,g));
+         frame->setPixel(y,x, RawPixel(g,g,g));
       }
    }
 }
@@ -467,6 +465,8 @@ void ImageProcessing::histogram(FrameBuffer* frame,FrameBuffer* outFrame){
       hist.push_back(RGBP(0,0,0));
    }
 
+
+
    for(int x = 0; x < frame->width; x++)
       for(int y = 0; y < frame->height; y++){
 
@@ -508,16 +508,15 @@ void ImageProcessing::histogram(FrameBuffer* frame,FrameBuffer* outFrame){
 void 
 ImageProcessing::convolution(FrameBuffer * frame,
       FrameBuffer * outFrame,
-      unsigned int subSample,
       double  pKernel[9])
 {
    FrameBufferIterator oit( outFrame );
    RawPixel pPixel;
 
-   for( unsigned int row = 0; row < frame->height; row = row + subSample )
+   for( unsigned int row = 0; row < frame->height; row++ )
    {
       oit.goPosition(row, 0 );
-      for( unsigned int col = subSample; col < frame->width; col = col + subSample, oit.goRight(subSample))
+      for( unsigned int col=0; col < frame->width; col++, oit.goRight(1))
       {
          RawPixel sumP = RawPixel(0,0,0);
          for (int x = -1; x < 2; x++)
@@ -538,11 +537,7 @@ ImageProcessing::convolution(FrameBuffer * frame,
 
 
 
-   void 
-ImageProcessing::sobel(FrameBuffer * frame,
-      FrameBuffer * outFrame,
-      unsigned int subSample)
-{
+void ImageProcessing::sobel(FrameBuffer * frame,FrameBuffer * outFrame){
    FrameBufferIterator oit( outFrame );
    RawPixel pPixel;
 
@@ -560,29 +555,26 @@ ImageProcessing::sobel(FrameBuffer * frame,
       +1.0, +2.0, +1.0,
    };
 
-   for( unsigned int row = 0; row < frame->height; row = row + subSample )
+   for( uint32_t x = 0; x < frame->width; x++ )
    {
-      oit.goPosition(row, 0 );
-
-
-      for( unsigned int col = subSample; col < frame->width; col = col + subSample, oit.goRight(subSample))
+      for( uint32_t y = 0; y < frame->height; y++)
       {
          RawPixel sumH = RawPixel(0,0,0);
          RawPixel sumV = RawPixel(0,0,0);
-         for (int x = -1; x < +2; x++)
-            for (int y = -1; y < +2; y++){
-               int currx = x+col;
-               int curry = y+row;
+         for (int n = -1; n < +2; n++)
+            for (int m = -1; m < +2; m++){
+               int currx = n+x;
+               int curry = m+y;
                if (currx >= 0 && curry >= 0 && currx < frame->width && curry < frame->height ){
                   RawPixel h,v;
                   frame->getPixel(curry, currx ,&v);
                   frame->getPixel(curry, currx ,&h);
-                  sumH += h * kernel_sobel_h[(x+1) * 3+ (y+1)];
-                  sumV += v * kernel_sobel_v[(x+1) * 3+ (y+1)];
+                  sumH += h * kernel_sobel_h[(n+1) * 3+ (m+1)];
+                  sumV += v * kernel_sobel_v[(n+1) * 3+ (m+1)];
                }
             }
          int f = sqrt(sumH.red *sumH.red + sumV.red * sumV.red);
-         oit.setPixel(RawPixel(f,f,f));
+         outFrame->setPixel(y,x,RawPixel(f,f,f));
       }
    }
 }

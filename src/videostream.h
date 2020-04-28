@@ -95,14 +95,14 @@ class VideoStream
    private:
       void ProcessShowColours(FrameBuffer* frame, FrameBuffer* outFrame,uint8_t subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);
-      void ProcessBlur(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);
-      void ProcessSharp(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);
+      void ProcessBlur(FrameBuffer* frame, FrameBuffer* outFrame );
+      void ProcessSharp(FrameBuffer* frame, FrameBuffer* outFrame);
       void ProcessSobel (FrameBuffer* frame, FrameBuffer* outFrame, uint8_t subSample); 
       void ProcessHuff(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample); 
       void ProcessLocalThreshold(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);
       void ProcessSegmentColours(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);
-      void ProcessCanny(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);  
+      void ProcessCanny(FrameBuffer* frame, FrameBuffer* outFrame);  
       void ProcessThreshold(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample);  
       void ProcessScanLines(FrameBuffer* frame, FrameBuffer* outFrame, uint8_t  subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);  

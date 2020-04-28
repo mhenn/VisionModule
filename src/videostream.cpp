@@ -279,8 +279,7 @@ void VideoStream::ProcessHistogram(FrameBuffer* frame, FrameBuffer* outFrame, ui
 
 void VideoStream::ProcessBlur(
       FrameBuffer * frame, 
-      FrameBuffer * outFrame, 
-      uint8_t subSample)
+      FrameBuffer * outFrame)
 {
 
    double kernel_blur[9] =
@@ -290,17 +289,16 @@ void VideoStream::ProcessBlur(
       0.0625,   0.125, 0.0625,
    };
 
-   ImageProcessing::toGreyScale(frame,subSample);
+   ImageProcessing::toGreyScale(frame);
    FrameBuffer* tmp = new FrameBufferRGB24BE();
    tmp->initialize( frame->width, frame->height );
-   ImageProcessing::convertBuffer(frame,tmp,subSample);
-   ImageProcessing::convolution(frame,outFrame,subSample,kernel_blur);
-   ImageProcessing::convertBuffer(tmp,outFrame,subSample);    
+   ImageProcessing::convertBuffer(frame,tmp);
+   ImageProcessing::convolution(frame,outFrame,kernel_blur);
+   ImageProcessing::convertBuffer(tmp,outFrame);    
 }
 void VideoStream::ProcessSharp(
       FrameBuffer * frame, 
-      FrameBuffer * outFrame, 
-      uint8_t subSample)
+      FrameBuffer * outFrame)
 {
    double kernel_sharpen[9] =
    {
@@ -309,8 +307,8 @@ void VideoStream::ProcessSharp(
       0.0,  -1.0,  0.0,
    };
 
-   ImageProcessing::toGreyScale(frame,subSample);
-   ImageProcessing::convolution(frame,outFrame,subSample,kernel_sharpen);
+   ImageProcessing::toGreyScale(frame);
+   ImageProcessing::convolution(frame,outFrame,kernel_sharpen);
 }
 void VideoStream::ProcessSobel(
       FrameBuffer * frame, 
@@ -325,7 +323,7 @@ void VideoStream::ProcessSobel(
       0.125, 0.25,   0.125,
       0.0625,   0.125, 0.0625,
    };
-   ImageProcessing::toGreyScale(frame,subSample);
+   ImageProcessing::toGreyScale(frame);
 
    FrameBuffer* tmp = new FrameBufferRGB24BE();
    tmp->initialize( frame->width, frame->height );
@@ -334,9 +332,9 @@ void VideoStream::ProcessSobel(
 
 
    ImageProcessing::convertBuffer(frame,tmp,subSample);
-   ImageProcessing::convolution(tmp,tmp2,subSample,kernel_blur);
+   ImageProcessing::convolution(tmp,tmp2,kernel_blur);
 
-   ImageProcessing::sobel(tmp,tmp2,subSample);
+   ImageProcessing::sobel(tmp,tmp2);
    ImageProcessing::convertBuffer(tmp2,outFrame,subSample);    
 
 }
@@ -353,10 +351,16 @@ void VideoStream::ProcessHuff(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
       uint8_t subsample){}
+
+//#include "canny.h"
 void VideoStream::ProcessCanny(
       FrameBuffer * frame, 
-      FrameBuffer * outFrame, 
-      uint8_t subsample){}
+      FrameBuffer * outFrame){
+
+//   Canny *canny = new Canny(frame);
+//   canny->start(outFrame);
+
+}
 void VideoStream::ProcessLocalThreshold(
       FrameBuffer * frame, 
       FrameBuffer * outFrame, 
@@ -390,9 +394,9 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
       ProcessThreshold(frame, outFrame, subSample);  
 
    if (ptype == Blur)
-      ProcessBlur(frame,outFrame,subSample);
+      ProcessBlur(frame,outFrame);
    if (ptype == Sharp)
-      ProcessSharp(frame, outFrame, subSample);  
+      ProcessSharp(frame, outFrame);  
 
    if (ptype == Sobel)
       ProcessSobel(frame,outFrame,subSample); 
@@ -414,7 +418,7 @@ void VideoStream::ProcessFrame( enum ProcessType ptype,
       ProcessSegmentColours(frame, outFrame, subSample, colours, mark);
 
    if (ptype == Canny)
-      ProcessCanny(frame, outFrame, subSample);  
+      ProcessCanny(frame, outFrame);  
 
    if ( ptype == ScanLines )
       ImageProcessing::scanLines(frame,outFrame,subSample);

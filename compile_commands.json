@@ -1,0 +1,177 @@
+[
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/motionclient.dir/src/motionclientmain.cpp.o -c /home/root/VisionModule/src/motionclientmain.cpp",
+  "file": "/home/root/VisionModule/src/motionclientmain.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/motionserver.dir/src/motionservermain.cpp.o -c /home/root/VisionModule/src/motionservermain.cpp",
+  "file": "/home/root/VisionModule/src/motionservermain.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/motionserver.dir/src/motionserver.cpp.o -c /home/root/VisionModule/src/motionserver.cpp",
+  "file": "/home/root/VisionModule/src/motionserver.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/motionserver.dir/src/pwmport.cpp.o -c /home/root/VisionModule/src/pwmport.cpp",
+  "file": "/home/root/VisionModule/src/pwmport.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/colourdefinition.cpp.o -c /home/root/VisionModule/libvideo/colourdefinition.cpp",
+  "file": "/home/root/VisionModule/libvideo/colourdefinition.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/floodfillstate.cpp.o -c /home/root/VisionModule/libvideo/floodfillstate.cpp",
+  "file": "/home/root/VisionModule/libvideo/floodfillstate.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/framebuffer.cpp.o -c /home/root/VisionModule/libvideo/framebuffer.cpp",
+  "file": "/home/root/VisionModule/libvideo/framebuffer.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/framebufferbayer.cpp.o -c /home/root/VisionModule/libvideo/framebufferbayer.cpp",
+  "file": "/home/root/VisionModule/libvideo/framebufferbayer.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/framebufferrgb24.cpp.o -c /home/root/VisionModule/libvideo/framebufferrgb24.cpp",
+  "file": "/home/root/VisionModule/libvideo/framebufferrgb24.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/framebufferrgb24be.cpp.o -c /home/root/VisionModule/libvideo/framebufferrgb24be.cpp",
+  "file": "/home/root/VisionModule/libvideo/framebufferrgb24be.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/framebufferrgb32.cpp.o -c /home/root/VisionModule/libvideo/framebufferrgb32.cpp",
+  "file": "/home/root/VisionModule/libvideo/framebufferrgb32.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/framebufferrgb565.cpp.o -c /home/root/VisionModule/libvideo/framebufferrgb565.cpp",
+  "file": "/home/root/VisionModule/libvideo/framebufferrgb565.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/geometry.cpp.o -c /home/root/VisionModule/libvideo/geometry.cpp",
+  "file": "/home/root/VisionModule/libvideo/geometry.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/imageprocessing.cpp.o -c /home/root/VisionModule/libvideo/imageprocessing.cpp",
+  "file": "/home/root/VisionModule/libvideo/imageprocessing.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/integralimage.cpp.o -c /home/root/VisionModule/libvideo/integralimage.cpp",
+  "file": "/home/root/VisionModule/libvideo/integralimage.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/jpeg_utils.cpp.o -c /home/root/VisionModule/libvideo/jpeg_utils.cpp",
+  "file": "/home/root/VisionModule/libvideo/jpeg_utils.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/pixel.cpp.o -c /home/root/VisionModule/libvideo/pixel.cpp",
+  "file": "/home/root/VisionModule/libvideo/pixel.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/quadtreedecomposition.cpp.o -c /home/root/VisionModule/libvideo/quadtreedecomposition.cpp",
+  "file": "/home/root/VisionModule/libvideo/quadtreedecomposition.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/rect.cpp.o -c /home/root/VisionModule/libvideo/rect.cpp",
+  "file": "/home/root/VisionModule/libvideo/rect.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/v4l2device.cpp.o -c /home/root/VisionModule/libvideo/v4l2device.cpp",
+  "file": "/home/root/VisionModule/libvideo/v4l2device.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/filedevice.cpp.o -c /home/root/VisionModule/libvideo/filedevice.cpp",
+  "file": "/home/root/VisionModule/libvideo/filedevice.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/videodevice.cpp.o -c /home/root/VisionModule/libvideo/videodevice.cpp",
+  "file": "/home/root/VisionModule/libvideo/videodevice.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/libvideo/visionobject.cpp.o -c /home/root/VisionModule/libvideo/visionobject.cpp",
+  "file": "/home/root/VisionModule/libvideo/visionobject.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/configuration.cpp.o -c /home/root/VisionModule/src/configuration.cpp",
+  "file": "/home/root/VisionModule/src/configuration.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/globals.cpp.o -c /home/root/VisionModule/src/globals.cpp",
+  "file": "/home/root/VisionModule/src/globals.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/httpd.cpp.o -c /home/root/VisionModule/src/httpd.cpp",
+  "file": "/home/root/VisionModule/src/httpd.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/httpdthread.cpp.o -c /home/root/VisionModule/src/httpdthread.cpp",
+  "file": "/home/root/VisionModule/src/httpdthread.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/httpdserverthread.cpp.o -c /home/root/VisionModule/src/httpdserverthread.cpp",
+  "file": "/home/root/VisionModule/src/httpdserverthread.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/httpdclientthread.cpp.o -c /home/root/VisionModule/src/httpdclientthread.cpp",
+  "file": "/home/root/VisionModule/src/httpdclientthread.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/main.cpp.o -c /home/root/VisionModule/src/main.cpp",
+  "file": "/home/root/VisionModule/src/main.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/serial.cpp.o -c /home/root/VisionModule/src/serial.cpp",
+  "file": "/home/root/VisionModule/src/serial.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/videostream.cpp.o -c /home/root/VisionModule/src/videostream.cpp",
+  "file": "/home/root/VisionModule/src/videostream.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/udpvisionserver.cpp.o -c /home/root/VisionModule/src/udpvisionserver.cpp",
+  "file": "/home/root/VisionModule/src/udpvisionserver.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/vision_module.dir/src/pwmport.cpp.o -c /home/root/VisionModule/src/pwmport.cpp",
+  "file": "/home/root/VisionModule/src/pwmport.cpp"
+},
+{
+  "directory": "/home/root/VisionModule/bin/release",
+  "command": "/usr/bin/c++   -DENABLE_V4L2 -DENABLE_FILE -O3 -DNDEBUG -std=c++0x -Wall -I/home/root/VisionModule/../libvideo    -o CMakeFiles/visionclient.dir/src/visionclientmain.cpp.o -c /home/root/VisionModule/src/visionclientmain.cpp",
+  "file": "/home/root/VisionModule/src/visionclientmain.cpp"
+}
+]

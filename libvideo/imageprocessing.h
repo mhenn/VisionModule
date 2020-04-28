@@ -55,13 +55,13 @@ class ImageProcessing {
 
       static void convertBuffer( FrameBuffer const * frame, FrameBuffer * outFrame, unsigned int subSample = 1);
       static void binarization(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, uint32_t lowerThreshold, uint32_t upperThreshold);
-static void convolution(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample, double pKernel[9]);
-static void localThreshold(FrameBuffer* frame, FrameBuffer* outFrame, int subSample); 
-static void scanLines(FrameBuffer* frame, FrameBuffer* outFrame, unsigned int subSample);
-static void sobel(FrameBuffer * frame, FrameBuffer * outFrame, unsigned int subSample);
-static void toGreyScale(FrameBuffer* frame, unsigned int subSample);
-static void integral(FrameBuffer* frame,FrameBuffer* outFrame);  
-static void histogram(FrameBuffer* frame,FrameBuffer* outFrame);  
+      static void convolution(FrameBuffer * frame, FrameBuffer * outFrame, double pKernel[9]);
+      static void localThreshold(FrameBuffer* frame, FrameBuffer* outFrame, int subSample); 
+      static void scanLines(FrameBuffer* frame, FrameBuffer* outFrame, unsigned int subSample);
+      static void sobel(FrameBuffer * frame, FrameBuffer * outFrame);
+      static void toGreyScale(FrameBuffer* frame);
+      static void integral(FrameBuffer* frame,FrameBuffer* outFrame);  
+      static void histogram(FrameBuffer* frame,FrameBuffer* outFrame);  
 
 };
 

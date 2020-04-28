@@ -2,6 +2,19 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 project(VisionModule)
 
+set(PROJECT_NAME "visionmodule")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
+file(GLOB_RECURSE SOURCE_FILES
+     ${CMAKE_SOURCE_DIR}/libvideo/*.cpp
+  ${CMAKE_SOURCE_DIR}/src/*.cpp)
+
+  file(GLOB_RECURSE HEADER_FILES
+     ${CMAKE_SOURCE_DIR}/src/*.h
+     ${CMAKE_SOURCE_DIR}/libvideo/*.h)
+
+
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 2)
 
@@ -24,37 +37,8 @@ configure_file (
    "${PROJECT_BINARY_DIR}/src/config.h"
 )
 
-ADD_EXECUTABLE( vision_module
-  libvideo/colourdefinition.cpp
-  libvideo/floodfillstate.cpp
-  libvideo/framebuffer.cpp
-  libvideo/framebufferbayer.cpp
-  libvideo/framebufferrgb24.cpp
-  libvideo/framebufferrgb24be.cpp
-  libvideo/framebufferrgb32.cpp
-  libvideo/framebufferrgb565.cpp
-  libvideo/geometry.cpp
-  libvideo/imageprocessing.cpp
-  libvideo/integralimage.cpp
-  libvideo/jpeg_utils.cpp
-  libvideo/pixel.cpp
-  libvideo/quadtreedecomposition.cpp
-  libvideo/rect.cpp
-  libvideo/v4l2device.cpp
-  libvideo/filedevice.cpp
-  libvideo/videodevice.cpp
-  libvideo/visionobject.cpp
-  src/configuration.cpp
-  src/globals.cpp
-  src/httpd.cpp
-  src/httpdthread.cpp
-  src/httpdserverthread.cpp
-  src/httpdclientthread.cpp
-  src/main.cpp
-  src/serial.cpp
-  src/videostream.cpp
-  src/udpvisionserver.cpp
-  src/pwmport.cpp
+ADD_EXECUTABLE( ${PROJECT_NAME}
+   ${SOURCE_FILES}
 )
 
 ADD_DEFINITIONS(
@@ -66,19 +50,18 @@ INCLUDE_DIRECTORIES(
   ${PROJECT_SOURCE_DIR}/../libvideo/
 )
 
-TARGET_LINK_LIBRARIES(vision_module 
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}
    "boost_program_options"
    "boost_system"
    "boost_thread"
    "v4l2"
    "avcodec" "avformat" "avutil" "swscale" "z" "bz2"
-#   "dc1394"
    "pthread"
    "jpeg"
 )
 
 ADD_CUSTOM_COMMAND(
-  TARGET  vision_module
+   TARGET  ${PROJECT_NAME}
   POST_BUILD
   COMMAND rm -fr ${CMAKE_BINARY_DIR}/www
   COMMENT Removing www directory
@@ -86,42 +69,7 @@ ADD_CUSTOM_COMMAND(
   COMMENT Copying www directories
 )
 
-ADD_EXECUTABLE( visionclient
-  src/visionclientmain.cpp
-)
+ADD_SUBDIRECTORY("submodules/visionclient")
+ADD_SUBDIRECTORY("submodules/motionclient")
+ADD_SUBDIRECTORY("submodules/motionserver")
 
-target_link_libraries(visionclient
-   "boost_program_options"
-   "boost_system"
-   "boost_thread"
-   "v4l2"
-#   "avcodec" "avformat" "avutil" "swscale" "z" "bz2"
-#   "dc1394"
-   "pthread"
-   "jpeg")
-
-ADD_EXECUTABLE( motionclient
-  src/motionclientmain.cpp
-)
-
-target_link_libraries(motionclient
-   "boost_program_options"
-   "boost_system"
-   "boost_thread"
-   "v4l2"
-   "pthread"
-   "jpeg")
-
-ADD_EXECUTABLE( motionserver
-  src/motionservermain.cpp
-  src/motionserver.cpp
-  src/pwmport.cpp
-)
-
-target_link_libraries(motionserver
-   "boost_program_options"
-   "boost_system"
-   "boost_thread"
-   "v4l2"
-   "pthread"
-   "jpeg")
