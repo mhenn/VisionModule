@@ -69,7 +69,8 @@ ADD_CUSTOM_COMMAND(
   COMMENT Copying www directories
 )
 
-ADD_SUBDIRECTORY("submodules/visionclient")
-ADD_SUBDIRECTORY("submodules/motionclient")
-ADD_SUBDIRECTORY("submodules/motionserver")
-
+if(CMAKE_ALL)
+   ADD_SUBDIRECTORY("submodules/visionclient")
+   ADD_SUBDIRECTORY("submodules/motionclient")
+   ADD_SUBDIRECTORY("submodules/motionserver")
+endif(CMAKE_ALL)
