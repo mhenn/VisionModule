@@ -11,6 +11,7 @@
 #include <boost/program_options.hpp>
 #include <pthread.h>
 
+#include "../libvideo/canny.h"
 #include "../libvideo/visionobject.h"
 #include "../libvideo/colourdefinition.h"
 
@@ -93,6 +94,7 @@ class VideoStream
       pthread_mutex_t         controls_mutex;
 
    private:
+      CannyEdgeDetection *detector;
       void ProcessShowColours(FrameBuffer* frame, FrameBuffer* outFrame,uint8_t subSample,
             std::vector<ColourDefinition> colours, RawPixel mark);
       void ProcessBlur(FrameBuffer* frame, FrameBuffer* outFrame );

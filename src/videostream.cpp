@@ -145,6 +145,9 @@ VideoStream::run( )
 
    device->nextFrame( & cameraFrame );
 
+   if (!detector)
+      detector = new CannyEdgeDetection(cameraFrame->width, cameraFrame->height);
+
    if ( cameraFrame != 0 )
    {
       outFrame = new FrameBufferRGB24BE( );
@@ -352,13 +355,13 @@ void VideoStream::ProcessHuff(
       FrameBuffer * outFrame, 
       uint8_t subsample){}
 
-//#include "canny.h"
+
 void VideoStream::ProcessCanny(
       FrameBuffer * frame, 
       FrameBuffer * outFrame){
 
-//   Canny *canny = new Canny(frame);
-//   canny->start(outFrame);
+   
+   detector->start(frame,outFrame);
 
 }
 void VideoStream::ProcessLocalThreshold(
